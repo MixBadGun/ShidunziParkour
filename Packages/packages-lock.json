@@ -15,7 +15,7 @@
     },
     "com.unity.burst": {
       "version": "1.8.18",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
@@ -24,7 +24,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.cinemachine": {
-      "version": "2.10.1",
+      "version": "2.10.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -33,7 +33,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.collab-proxy": {
-      "version": "2.5.2",
+      "version": "2.6.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -102,7 +102,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.31",
+      "version": "3.0.34",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -120,7 +120,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.inputsystem": {
-      "version": "1.11.1",
+      "version": "1.11.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -219,7 +219,7 @@
       }
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "1.21.24",
+      "version": "1.21.25",
       "depth": 2,
       "source": "registry",
       "dependencies": {},

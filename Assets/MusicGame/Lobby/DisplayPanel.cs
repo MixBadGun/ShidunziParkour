@@ -57,7 +57,7 @@ public class DisplayPanel : MonoBehaviour
         description.text = $"曲师：{author}\n谱师：{mapper}";
 
         string record_path = $"{Application.persistentDataPath}/record/{BeatmapInfo.beatmap_name}.dat";
-        for (int j = 0; j < recordItemFather.transform.childCount; j++)
+        while (recordItemFather.transform.childCount > 0)
         {
             DestroyImmediate(recordItemFather.transform.GetChild(0).gameObject);
         }
@@ -76,9 +76,9 @@ public class DisplayPanel : MonoBehaviour
 
         if (File.Exists(ad_data_path))
         {
-            for (int i = 0; i < AdbarList.transform.childCount; i++)
+            while (AdbarList.transform.childCount > 0)
             {
-                Destroy(AdbarList.transform.GetChild(0).gameObject);
+                DestroyImmediate(AdbarList.transform.GetChild(0).gameObject);
             }
             AdbarList.SetActive(true);
             List<AdInfo> ad_list = JsonConvert.DeserializeObject<List<AdInfo>>(File.ReadAllText(ad_data_path));

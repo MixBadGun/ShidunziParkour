@@ -303,7 +303,7 @@ public class BeatmapManager : MonoBehaviour
             }
             if (data[0].Trim() == "offset")
             {
-                offset += getValue(data[1]);
+                offset = DataStorager.settings.offsetMs / 1000 + getValue(data[1]);
                 continue;
             }
             if (data[0].Trim() == "bg_offset")
@@ -516,9 +516,9 @@ public class BeatmapManager : MonoBehaviour
 
     private void LoadBeatmap(float start_time = 0)
     {
-        for (int i = 0; i < noteParent.transform.childCount; i++)
+        while (noteParent.transform.childCount > 0)
         {
-            Destroy(noteParent.transform.GetChild(0).gameObject);
+            DestroyImmediate(noteParent.transform.GetChild(0).gameObject);
         }
         remain_beats.Clear();
         LoadData(BeatmapInfo.beatmap_name);

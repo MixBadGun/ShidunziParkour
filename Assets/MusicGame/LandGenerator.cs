@@ -16,7 +16,7 @@ public class LandGenerator : MonoBehaviour
     public void RespawnLand()
     {
         land_count = -1;
-        for (int i = 0; i < land_parent.transform.childCount; i++)
+        while (land_parent.transform.childCount > 0)
         {
             DestroyImmediate(land_parent.transform.GetChild(0).gameObject);
         }
