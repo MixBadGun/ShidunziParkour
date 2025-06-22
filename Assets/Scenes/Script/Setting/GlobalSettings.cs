@@ -6,7 +6,7 @@ using UnityEngine.Audio;
 
 public class GlobalSettings : MonoBehaviour
 {
-    void Start() {
+    void Awake() {
         handleSettings();
     }
     public AudioMixer AudioMixer;

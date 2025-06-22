@@ -23,6 +23,10 @@ public class PracticingBar : MonoBehaviour
 
     public void Reload()
     {
+        if (firstTime)
+        {
+            return;
+        }
         if (!float.TryParse(inputField.text, out float ctime))
         {
             ctime = 0;

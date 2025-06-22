@@ -15,6 +15,8 @@ public class Settings : MonoBehaviour
     public Text MaxLife;
     public InputField CustomMaxLife;
     public Toggle notShake;
+    public Toggle fpsDisplay;
+    public InputField fpsLimit;
     public InputField MusicGameSpeed;
     public Toggle isAutoPlay;
     public Toggle notVibrate;
@@ -22,6 +24,7 @@ public class Settings : MonoBehaviour
     public Toggle notBeatmapSkin;
     public Toggle RelaxMod;
     public Toggle CinemaMod;
+    public Toggle HideKeyDisplay;
     public InputField MusicGameOffsetMs;
     public TMP_Dropdown SkinDropdown;
     List<string> subfolders;
@@ -36,6 +39,7 @@ public class Settings : MonoBehaviour
         notBeatmapSkin.isOn = DataStorager.settings.notBeatmapSkin;
         RelaxMod.isOn = DataStorager.settings.relaxMod;
         CinemaMod.isOn = DataStorager.settings.cinemaMod;
+        HideKeyDisplay.isOn = DataStorager.settings.hideKeyDisplay;
         MaxLife.text = DataStorager.maxLife.count.ToString();
         MusicGameOffsetMs.text = DataStorager.settings.offsetMs.ToString();
         if(DataStorager.settings.CustomMaxLife > 0){
@@ -48,6 +52,8 @@ public class Settings : MonoBehaviour
         } else {
             MusicGameSpeed.text = "1";
         }
+        fpsDisplay.isOn = DataStorager.settings.fpsDisplay;
+        fpsLimit.text = DataStorager.settings.fpsLimit.ToString();
 
         // 皮肤
         string skinFolder = $"{Application.persistentDataPath}/skin";
@@ -75,6 +81,10 @@ public class Settings : MonoBehaviour
         DataStorager.settings.notBeatmapSkin = notBeatmapSkin.isOn;
         DataStorager.settings.relaxMod = RelaxMod.isOn;
         DataStorager.settings.cinemaMod = CinemaMod.isOn;
+        DataStorager.settings.fpsDisplay = fpsDisplay.isOn;
+        DataStorager.settings.hideKeyDisplay = HideKeyDisplay.isOn;
+        DataStorager.settings.fpsLimit = int.TryParse(fpsLimit.text, out int fps) && fps > 0 ? fps : 300;
+
         if (!int.TryParse(CustomMaxLife.text, out int clife))
         {
             DataStorager.settings.CustomMaxLife = DataStorager.maxLife.count;

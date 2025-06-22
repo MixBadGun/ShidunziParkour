@@ -64,11 +64,18 @@ public class DisplayPanel : MonoBehaviour
         if (File.Exists(record_path))
         {
             var data_list = JsonConvert.DeserializeObject<List<BeatmapManager.BeatmapResult>>(File.ReadAllText(record_path));
+            int index = 0;
             foreach (BeatmapManager.BeatmapResult result in data_list)
             {
                 GameObject newItem = Instantiate(recordItem, recordItemFather.transform);
                 newItem.SetActive(true);
                 newItem.GetComponent<RecordItem>().beatmapResult = result;
+                newItem.GetComponent<RecordItem>().index = index;
+                index++;
+                if(result.play_records == null)
+                {
+                    newItem.GetComponent<RecordItem>().viewRecordButton.SetActive(false);
+                }
             }
         }
 

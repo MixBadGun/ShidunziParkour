@@ -3,17 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RecordItem : MonoBehaviour
 {
     public BeatmapManager.BeatmapResult beatmapResult;
+    public int index;
     public TMP_Text maxCombo;
     public TMP_Text achievement;
     public TMP_Text playTime;
     public Image Rating;
+    public GameObject viewRecordButton;
     public Sprite[] Presents;
     // Start is called before the first frame update
     void Start()
@@ -24,11 +25,20 @@ public class RecordItem : MonoBehaviour
         DateTime localDateTime = utcDateTime.ToLocalTime();
         playTime.text = localDateTime.ToString("yyyy/MM/dd HH:mm:ss");
         int max_rating = beatmapResult.rating;
-        if(max_rating < 15){
+        if (max_rating < 15)
+        {
             Rating.sprite = Presents[max_rating];
-        } else {
-            Rating.sprite = null;
-            Rating.color = new Color(0,0,0,0);
         }
+        else
+        {
+            Rating.sprite = null;
+            Rating.color = new Color(0, 0, 0, 0);
+        }
+    }
+
+    public void ViewRecordStart()
+    {
+        BeatmapInfo.record_index = index;
+        SceneManager.LoadScene("MusicGame");
     }
 }

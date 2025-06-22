@@ -59,7 +59,8 @@ public class Player : MonoBehaviour
     }
 
     IEnumerator FixPos(){
-        while(true){
+        while (true)
+        {
             ChangePos();
             yield return new WaitForSeconds(0.5f);
         }
@@ -175,22 +176,25 @@ public class Player : MonoBehaviour
         }
         return false;
     }
-    public void moveUp()
+    public void moveUp(KeyCode keyCode = KeyCode.None)
     {
+        beatmapManager.AddPlayRecord(MoveType.MOVE_UP, keyCode);
         if (checkGrouned() || loosen_time < 0.1)
         {
             // the_rigidbody.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
             float new_speed = gravity * 60 / beatmapManager.getBPM();
-            velocity += new Vector3(0,new_speed,0);
-            if(!isFlying){
+            velocity += new Vector3(0, new_speed, 0);
+            if (!isFlying)
+            {
                 loosen_time = 0;
             }
             isFlying = true;
             // isGrounded = false;
         }
     }
-    public void moveLeft()
+    public void moveLeft(KeyCode keyCode = KeyCode.None)
     {
+        beatmapManager.AddPlayRecord(MoveType.MOVE_LEFT, keyCode);
         if (now_track > 1)
         {
             now_track -= 1;
@@ -198,8 +202,9 @@ public class Player : MonoBehaviour
             toMoving = true;
         }
     }
-    public void moveRight()
+    public void moveRight(KeyCode keyCode = KeyCode.None)
     {
+        beatmapManager.AddPlayRecord(MoveType.MOVE_RIGHT, keyCode);
         if (now_track < MAX_TRACKS)
         {
             now_track += 1;
@@ -207,8 +212,9 @@ public class Player : MonoBehaviour
             toMoving = true;
         }
     }
-    public void moveDown()
+    public void moveDown(KeyCode keyCode = KeyCode.None)
     {
+        beatmapManager.AddPlayRecord(MoveType.MOVE_DOWN, keyCode);
         // the_rigidbody.AddForce(Vector3.down * 50f, ForceMode.Impulse);
         isDrop = true;
         checkGrouned();
@@ -240,14 +246,13 @@ public class Player : MonoBehaviour
     void CalcAndResponse(FromTo fromto)
     {
         Vector2 vec = fromto.second - fromto.first;
-        float max_result = 0;
         // 距离过小则忽略
         if (Vector2.Distance(Vector2.zero, vec) < 10)
         {
             return;
         }
         int now_index = 0;
-        max_result = Vector2.Dot(vec, Vector2.up);
+        float max_result = Vector2.Dot(vec, Vector2.up);
         if (Vector2.Dot(vec, Vector2.right) > max_result)
         {
             now_index = 1;
@@ -306,26 +311,27 @@ public class Player : MonoBehaviour
         KeyCode[] firstKeys = DataStorager.keysettings.pad1;
         foreach( KeyCode key in firstKeys ){
             if(Input.GetKeyDown(key)){
-                 moveToIndex(1);
+                 moveToIndex(1,key);
             }
         }
 
         KeyCode[] secondKeys = DataStorager.keysettings.pad2;
         foreach( KeyCode key in secondKeys ){
             if(Input.GetKeyDown(key)){
-                 moveToIndex(2);
+                 moveToIndex(2,key);
             }
         }
 
         KeyCode[] thirdKeys = DataStorager.keysettings.pad3;
         foreach( KeyCode key in thirdKeys ){
             if(Input.GetKeyDown(key)){
-                 moveToIndex(3);
+                 moveToIndex(3,key);
             }
         }
     }
 
-    void moveToIndex(int index){
+    public void moveToIndex(int index, KeyCode keyCode = KeyCode.None){
+        beatmapManager.AddPlayRecord(MoveType.MOVE_INDEX, keyCode);
         now_track = index;
         CreateNewInputImpluse(now_track);
         toMoving = true;
@@ -336,28 +342,28 @@ public class Player : MonoBehaviour
         KeyCode[] leftKeys = DataStorager.keysettings.left;
         foreach( KeyCode key in leftKeys ){
             if(Input.GetKeyDown(key)){
-                 moveLeft();
+                 moveLeft(key);
             }
         }
 
         KeyCode[] rightKeys = DataStorager.keysettings.right;
         foreach( KeyCode key in rightKeys ){
             if(Input.GetKeyDown(key)){
-                 moveRight();
+                 moveRight(key);
             }
         }
 
         KeyCode[] upKeys = DataStorager.keysettings.up;
         foreach( KeyCode key in upKeys ){
             if(Input.GetKeyDown(key)){
-                 moveUp();
+                 moveUp(key);
             }
         }
 
         KeyCode[] downKeys = DataStorager.keysettings.down;
         foreach( KeyCode key in downKeys ){
             if(Input.GetKeyDown(key)){
-                 moveDown();
+                 moveDown(key);
             }
         }
     }

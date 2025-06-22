@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using static InputStruct;
 using static LevelDisplayer;
 
 public class BeatmapManager : MonoBehaviour
@@ -55,6 +56,7 @@ public class BeatmapManager : MonoBehaviour
     bool isSaved = false;
     bool isAutoPlay = DataStorager.settings.isAutoPlay;
     bool isPractcing = false;
+    bool isViewingRecord = false;
     float distance = 10;
     public Player Player;
     public GameObject[] ObstacleList;
@@ -70,11 +72,13 @@ public class BeatmapManager : MonoBehaviour
     public GameObject CinemaImage;
     public GameObject PracticingImage;
     public GameObject RelaxModImage;
+    public GameObject ViewRecordImage;
     public Animator ShowFrontVideo;
     public Animator MapInfo;
     public GameObject GetIntoButton;
     public GameObject PracticingObject;
     public GameObject noteParent;
+    public ControlDisplay controlDisplay;
 
     // 谱面信息展示
     public RawImage DisplayInfoImage;
@@ -97,6 +101,27 @@ public class BeatmapManager : MonoBehaviour
     List<CameraData> should_change_camera_data = new();
     List<float> should_change_camera_time = new();
     float autoShift = 0.0f;
+
+    List<Play_Record> play_records = new();
+
+    public void AddPlayRecord(MoveType moveType, KeyCode keyCode = KeyCode.None)
+    {
+        if (keyCode != KeyCode.None
+            && !DataStorager.settings.hideKeyDisplay)
+        {
+            controlDisplay.TriggerKey(keyCode);
+        }
+        if (isViewingRecord)
+            {
+                return;
+            }
+        play_records.Add(new()
+        {
+            control_time = GetRealPlayingTime(),
+            keyCode = keyCode,
+            moveType = moveType
+        });
+    }
 
     string dataFolder;
 
@@ -489,17 +514,63 @@ public class BeatmapManager : MonoBehaviour
     //     }
     // }
 
+    void LoadViewRecordData()
+    {
+        string path = $"{Application.persistentDataPath}/record/{BeatmapInfo.beatmap_name}.dat";
+
+        if (!Directory.Exists($"{Application.persistentDataPath}/record/"))
+        {
+            Directory.CreateDirectory($"{Application.persistentDataPath}/record/");
+        }
+
+        List<BeatmapResult> data_list = new();
+        if (File.Exists(path))
+        {
+            data_list = JsonConvert.DeserializeObject<List<BeatmapResult>>(File.ReadAllText(path));
+        }
+
+        play_records = data_list[BeatmapInfo.record_index].play_records;
+
+        if (play_records == null)
+        {
+            return;
+        }
+        Player.moveToIndex(2);
+        while (play_records.Count > 0 && play_records[0].control_time < GetRealPlayingTime())
+        {
+            switch (play_records[0].moveType)
+            {
+                case MoveType.MOVE_LEFT: Player.moveLeft(); break;
+                case MoveType.MOVE_RIGHT: Player.moveRight(); break;
+            }
+            play_records.RemoveAt(0);
+        }
+    }
+
     private void Awake()
     {
         Instance = this;
 
-        Application.targetFrameRate = 300;
+        Application.targetFrameRate = DataStorager.settings.fpsLimit > 0 ? DataStorager.settings.fpsLimit : 300;
 
         dataFolder = $"{Application.persistentDataPath}/music";
         LoadResource(BeatmapInfo.beatmap_name);
+
+        if (BeatmapInfo.record_index >= 0)
+        {
+            isViewingRecord = true;
+            ViewRecordImage.SetActive(true);
+        }
+
         LoadBeatmap();
         ComboDisplay.SetActive(false);
         ResultCanvas.SetActive(false);
+
+        if (isViewingRecord)
+        {
+            isAutoPlay = false;
+        }
+
         if (!isAutoPlay)
         {
             AutoPlayImage.SetActive(false);
@@ -516,6 +587,11 @@ public class BeatmapManager : MonoBehaviour
 
     private void LoadBeatmap(float start_time = 0)
     {
+        if (isViewingRecord)
+        {
+            LoadViewRecordData();
+        }
+
         while (noteParent.transform.childCount > 0)
         {
             DestroyImmediate(noteParent.transform.GetChild(0).gameObject);
@@ -562,18 +638,19 @@ public class BeatmapManager : MonoBehaviour
         Player.ChangePos();
         landGenerator.RespawnLand();
         LoadBeatmap(start_time);
+        UpdateObstacle();
     }
 
     public void GetIntoPractice()
     {
         BeforeTime = 0;
         PracticingImage.SetActive(true);
-        GetIntoButton.SetActive(false);
         PracticingObject.SetActive(true);
         PracticingObject.GetComponent<PracticingBar>().SetFirstValue();
         isPractcing = true;
         MusicPlayer.Pause();
         Time.timeScale = 0;
+        GetIntoButton.SetActive(false);
     }
 
     // Start is called before the first frame update
@@ -624,12 +701,8 @@ public class BeatmapManager : MonoBehaviour
         return point_detail;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    void UpdateObstacle()
     {
-        // 自动游玩
-        autoplay();
-
         while (detect_list.Contains(remain_beats[0].type) && remain_beats[0].beat_time - OnPlayingTime + BeforeTime < 5)
         {
             Vector3 place_pos;
@@ -686,10 +759,14 @@ public class BeatmapManager : MonoBehaviour
             }
             remain_beats.RemoveAt(0);
         }
-        if (!detect_list.Contains(remain_beats[0].type) && remain_beats[0].type != B_TYPE.FINISH)
+        while (!detect_list.Contains(remain_beats[0].type) && remain_beats[0].type != B_TYPE.FINISH)
         {
             remain_beats.RemoveAt(0);
         }
+    }
+
+    void VideoHandle()
+    {
         if (hasVideo && !isVideoPlaying)
         {
             if (-BeforeTime + OnPlayingTime >= videoOffset)
@@ -699,7 +776,10 @@ public class BeatmapManager : MonoBehaviour
                 BackForVideo2.GetComponent<AspectRatioFitter>().aspectRatio = (float)videoPlayer.width / videoPlayer.height;
             }
         }
+    }
 
+    void MusicAndTimeAndSaveHandle()
+    {
         if (BeforeTime > 0)
         {
             BeforeTime -= Time.fixedDeltaTime;
@@ -718,7 +798,9 @@ public class BeatmapManager : MonoBehaviour
                 && !DataStorager.settings.relaxMod
                 && !DataStorager.settings.cinemaMod
                 && !isPractcing
-                && !(DateTime.Now.Day == 1 && DateTime.Now.Month == 4))
+                && !(DateTime.Now.Day == 1 && DateTime.Now.Month == 4)
+                && !isViewingRecord
+            )
             {
                 SaveResult();
             }
@@ -734,6 +816,20 @@ public class BeatmapManager : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        SyncplayHandle();
+        UpdateObstacle();
+        VideoHandle();
+        MusicAndTimeAndSaveHandle();
+    }
+
+    public struct Play_Record
+    {
+        public float control_time;
+        public KeyCode keyCode;
+        public MoveType moveType;
+    }
 
     public struct BeatmapResult
     {
@@ -742,12 +838,14 @@ public class BeatmapManager : MonoBehaviour
         public int maxCombo;
         public long achieveTime;
         public Point_Detail point_detail;
+        public List<Play_Record> play_records;
     }
 
     enum Rating { SSSp, SSS, SSp, SS, Sp, S, AAA, AA, A, BBB, BB, B, C, D, F };
 
-    void autoplay()
+    void SyncplayHandle()
     {
+        // 需要同步时间点处理的音符
         if (auto_remain_beats[0].type == B_TYPE.BPM_TYPE)
         {
             ready_to_change_bpm = true;
@@ -807,6 +905,8 @@ public class BeatmapManager : MonoBehaviour
                 }
             }
         }
+
+        // 自动游玩判断
         if (isAutoPlay)
         {
             if (!detect_list.Contains(auto_remain_beats[0].type))
@@ -822,11 +922,11 @@ public class BeatmapManager : MonoBehaviour
                     int jump_times = (int)Math.Log(auto_remain_beats[0].stack * auto_remain_beats[0].size + auto_remain_beats[0].y_offset, 2);
                     for (int k = 0; k < jump_times; k++)
                     {
-                        Player.moveUp();
+                        Player.moveUp(KeyCode.UpArrow);
                     }
                 }
             }
-            int[] should_tracks = toTouchTracks(auto_remain_beats[0].track, remain_beats[0].size);
+            int[] should_tracks = toTouchTracks(auto_remain_beats[0].track, auto_remain_beats[0].size);
             if (!should_tracks.Contains(Player.GetNowTrack()) && (should_tracks.Count() > 0))
             {
                 if (!last_record)
@@ -848,14 +948,14 @@ public class BeatmapManager : MonoBehaviour
                     {
                         for (int j = 0; j < should_move_times; j++)
                         {
-                            Player.moveRight();
+                            Player.moveRight(KeyCode.RightArrow);
                         }
                     }
                     else
                     {
                         for (int j = 0; j < -should_move_times; j++)
                         {
-                            Player.moveLeft();
+                            Player.moveLeft(KeyCode.LeftArrow);
                         }
                     }
                 }
@@ -864,7 +964,7 @@ public class BeatmapManager : MonoBehaviour
         while (Player.GetPos().z >= (auto_remain_beats[0].beat_time + iniOffset - autoShift) * Player.GetVelocity()
             && detect_list.Contains(auto_remain_beats[0].type))
         {
-            int[] should_tracks = toTouchTracks(auto_remain_beats[0].track, remain_beats[0].size);
+            int[] should_tracks = toTouchTracks(auto_remain_beats[0].track, auto_remain_beats[0].size);
 
             // 补足 Auto 的痛（
             if (!should_tracks.Contains(Player.GetNowTrack()) && (should_tracks.Count() > 0) && isAutoPlay)
@@ -875,21 +975,21 @@ public class BeatmapManager : MonoBehaviour
                 {
                     for (int j = 0; j < should_move_times; j++)
                     {
-                        Player.moveRight();
+                        Player.moveRight(KeyCode.RightArrow);
                     }
                 }
                 else
                 {
                     for (int j = 0; j < -should_move_times; j++)
                     {
-                        Player.moveLeft();
+                        Player.moveLeft(KeyCode.LeftArrow);
                     }
                 }
             }
 
             if (((auto_remain_beats[0].stack > 1 && Player.GetPos().y > 0.1) || (Player.GetPos().y > 1 + auto_remain_beats[0].y_offset)) && isAutoPlay)
             {
-                Player.moveDown();
+                Player.moveDown(KeyCode.DownArrow);
             }
 
             // 设置跨越速度
@@ -900,6 +1000,35 @@ public class BeatmapManager : MonoBehaviour
 
             auto_remain_beats.RemoveAt(0);
             last_record = false;
+        }
+
+        // 观看记录模式
+        if (isViewingRecord)
+        {
+            if(play_records == null || play_records.Count == 0)
+            {
+                return;
+            }
+            while (play_records.Count > 0 && play_records[0].control_time <= GetRealPlayingTime())
+            {
+                switch (play_records[0].moveType)
+                {
+                    case MoveType.MOVE_LEFT:
+                        Player.moveLeft(play_records[0].keyCode);
+                        break;
+                    case MoveType.MOVE_RIGHT:
+                        Player.moveRight(play_records[0].keyCode);
+                        break;
+                    case MoveType.MOVE_UP:
+                        Player.moveUp(play_records[0].keyCode);
+                        break;
+                    case MoveType.MOVE_DOWN:
+                        Player.moveDown(play_records[0].keyCode);
+                        break;
+                }
+                AddPlayRecord(MoveType.MOVE_INDEX, play_records[0].keyCode);
+                play_records.RemoveAt(0);
+            }
         }
     }
 
@@ -918,13 +1047,14 @@ public class BeatmapManager : MonoBehaviour
             data_list = JsonConvert.DeserializeObject<List<BeatmapResult>>(File.ReadAllText(path));
         }
 
-        BeatmapResult data = new BeatmapResult()
+        BeatmapResult data = new()
         {
             rating = GetRating(),
             achievement = GetProgress() * 100,
             maxCombo = MaxCombo,
             achieveTime = DateTime.UtcNow.Ticks / TimeSpan.TicksPerSecond,
-            point_detail = point_detail
+            point_detail = point_detail,
+            play_records = play_records
         };
 
         data_list.Add(data);

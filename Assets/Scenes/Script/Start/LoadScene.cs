@@ -13,7 +13,7 @@ public class LoadScene : MonoBehaviour
         // if(GameObject.Find("MultyScript") != null){
         //     Destroy(GameObject.Find("MultyScript"));
         // }
-        Application.targetFrameRate = 300;
+        Application.targetFrameRate = DataStorager.settings.fpsLimit > 0 ? DataStorager.settings.fpsLimit : 300;
         SceneManager.LoadScene("Start");
     }
 

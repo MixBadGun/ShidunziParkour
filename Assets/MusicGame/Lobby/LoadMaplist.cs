@@ -121,13 +121,10 @@ public class LoadMaplist : MonoBehaviour
             var info = infos[0];
             if (!init)
             {
-                item = SingleItem;
                 init = true;
             }
-            else
-            {
-                item = Instantiate(SingleItem, MapList.transform);
-            }
+            item = Instantiate(SingleItem, MapList.transform);
+            item.SetActive(true);
             item.GetComponent<SingleBeatmapInfo>().beatmapInfos = infos;
             item.GetComponent<SingleBeatmapInfo>().diff_index = 0;
             item.GetComponent<SingleBeatmapInfo>().LoadBeatmapInfo();
@@ -163,7 +160,6 @@ public class LoadMaplist : MonoBehaviour
         // 无谱面则隐藏
         if (!init)
         {
-            SingleItem.SetActive(false);
             EmptyInfo.SetActive(true);
         }
     }
@@ -196,11 +192,13 @@ public class LoadMaplist : MonoBehaviour
 
     public static void GameStart()
     {
+        BeatmapInfo.record_index = -1;
         SceneManager.LoadScene("MusicGame");
     }
 
     public void SyncGameStart(bool host)
     {
+        BeatmapInfo.record_index = -1;
         if (!int.TryParse(networkPort.text, out int port))
         {
             port = 4782;

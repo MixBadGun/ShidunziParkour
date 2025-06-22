@@ -41,7 +41,8 @@ public class DataManager
         public string playerID;
     }
 
-    public struct DunziSettings {
+    public struct DunziSettings
+    {
         public float SoundVolume;
         public float MusicVolume;
         public bool hasMotionBlur;
@@ -56,6 +57,9 @@ public class DataManager
         public bool relaxMod;
         public bool cinemaMod;
         public string skinPath;
+        public bool fpsDisplay;
+        public int fpsLimit;
+        public bool hideKeyDisplay;
     }
 
     public struct KeySettings {
