@@ -258,7 +258,7 @@ public class LoadMaplist : MonoBehaviour
         {
             if (file.Name.Split(".").Last() == "dat")
             {
-                ConvertRecord(Path.Join(file.DirectoryName, file.Name), file.Name.Split(".")[0]);
+                ConvertRecord(Path.Join(file.DirectoryName, file.Name), Path.GetFileNameWithoutExtension(file.Name));
             }
         }
     }
