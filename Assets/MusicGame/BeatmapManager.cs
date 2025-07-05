@@ -5,8 +5,6 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using TMPro;
-using Unity.Entities.UniversalDelegates;
-using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -516,25 +514,20 @@ public class BeatmapManager : MonoBehaviour
 
     void LoadViewRecordData()
     {
-        string path = $"{Application.persistentDataPath}/record/{BeatmapInfo.beatmap_name}.dat";
+        string record_file = $"{Application.persistentDataPath}/record/{BeatmapInfo.beatmap_name}/{BeatmapInfo.record_identity}";
 
-        if (!Directory.Exists($"{Application.persistentDataPath}/record/"))
+        if (!File.Exists(record_file))
         {
-            Directory.CreateDirectory($"{Application.persistentDataPath}/record/");
+            return;
         }
 
-        List<BeatmapResult> data_list = new();
-        if (File.Exists(path))
-        {
-            data_list = JsonConvert.DeserializeObject<List<BeatmapResult>>(File.ReadAllText(path));
-        }
-
-        play_records = data_list[BeatmapInfo.record_index].play_records;
+        play_records = JsonConvert.DeserializeObject<BeatmapResult>(File.ReadAllText(record_file)).play_records;
 
         if (play_records == null)
         {
             return;
         }
+
         Player.moveToIndex(2);
         while (play_records.Count > 0 && play_records[0].control_time < GetRealPlayingTime())
         {
@@ -556,7 +549,7 @@ public class BeatmapManager : MonoBehaviour
         dataFolder = $"{Application.persistentDataPath}/music";
         LoadResource(BeatmapInfo.beatmap_name);
 
-        if (BeatmapInfo.record_index >= 0)
+        if (BeatmapInfo.record_identity != "")
         {
             isViewingRecord = true;
             ViewRecordImage.SetActive(true);
@@ -1034,17 +1027,18 @@ public class BeatmapManager : MonoBehaviour
 
     void SaveResult()
     {
-        string path = $"{Application.persistentDataPath}/record/{BeatmapInfo.beatmap_name}.dat";
+        long achieveTime = DateTime.UtcNow.Ticks;
 
+        string path = $"{Application.persistentDataPath}/record/{BeatmapInfo.beatmap_name}";
+        string save_target = $"{path}/{achieveTime}.dat";
         if (!Directory.Exists($"{Application.persistentDataPath}/record/"))
         {
             Directory.CreateDirectory($"{Application.persistentDataPath}/record/");
         }
 
-        List<BeatmapResult> data_list = new();
-        if (File.Exists(path))
+        if (!Directory.Exists(path))
         {
-            data_list = JsonConvert.DeserializeObject<List<BeatmapResult>>(File.ReadAllText(path));
+            Directory.CreateDirectory(path);
         }
 
         BeatmapResult data = new()
@@ -1052,15 +1046,13 @@ public class BeatmapManager : MonoBehaviour
             rating = GetRating(),
             achievement = GetProgress() * 100,
             maxCombo = MaxCombo,
-            achieveTime = DateTime.UtcNow.Ticks / TimeSpan.TicksPerSecond,
+            achieveTime = achieveTime,
             point_detail = point_detail,
             play_records = play_records
         };
 
-        data_list.Add(data);
-
-        var jsonData = JsonConvert.SerializeObject(data_list.ToArray(), Formatting.Indented);
-        File.WriteAllText(path, jsonData);
+        var jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
+        File.WriteAllText(save_target, jsonData);
     }
 
     public float GetProgress()

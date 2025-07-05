@@ -44,6 +44,8 @@ public class LoadMaplist : MonoBehaviour
 
     private void Awake()
     {
+        UpdateOldRecord();
+
         instance = this;
         DisplayPanel = t_DisplayPanel;
         dataFolder = $"{Application.persistentDataPath}/music";
@@ -105,7 +107,7 @@ public class LoadMaplist : MonoBehaviour
                     continue;
                 }
             }
-            string identify_key = info.title + info.author + info.mapper;
+            string identify_key = info.title + info.author;
             if (!beatmapInfos.ContainsKey(identify_key))
             {
                 beatmapInfos.Add(identify_key, new());
@@ -192,13 +194,13 @@ public class LoadMaplist : MonoBehaviour
 
     public static void GameStart()
     {
-        BeatmapInfo.record_index = -1;
+        BeatmapInfo.record_identity = "";
         SceneManager.LoadScene("MusicGame");
     }
 
     public void SyncGameStart(bool host)
     {
-        BeatmapInfo.record_index = -1;
+        BeatmapInfo.record_identity = "";
         if (!int.TryParse(networkPort.text, out int port))
         {
             port = 4782;
@@ -212,7 +214,7 @@ public class LoadMaplist : MonoBehaviour
             networkManager.networkAddress = networkIP.text;
         }
         networkManager.GetComponent<KcpTransport>().port = (ushort)port;
-        if(!host)
+        if (!host)
         {
             NetworkClient.Shutdown();
             networkManager.GetComponent<NetworkDiscovery>().StopDiscovery();
@@ -240,5 +242,47 @@ public class LoadMaplist : MonoBehaviour
         string[] address = networkDropdown.options[networkDropdown.value].text.Split(":");
         networkIP.text = address[0];
         networkPort.text = address[1];
+    }
+
+    // 将旧版记录转换为新版记录
+    void UpdateOldRecord()
+    {
+        string path = $"{Application.persistentDataPath}/record/";
+        if (!Directory.Exists(path))
+        {
+            return;
+        }
+
+        DirectoryInfo dirInfo = new(path);
+        foreach (FileInfo file in dirInfo.GetFiles())
+        {
+            if (file.Name.Split(".").Last() == "dat")
+            {
+                ConvertRecord(Path.Join(file.DirectoryName, file.Name), file.Name.Split(".")[0]);
+            }
+        }
+    }
+
+    void ConvertRecord(string record_path, string target)
+    {
+        if (File.Exists(record_path))
+        {
+            var data_list = JsonConvert.DeserializeObject<List<BeatmapManager.BeatmapResult>>(File.ReadAllText(record_path));
+            for (int i = 0; i < data_list.Count; i++)
+            {
+                var result = data_list[i];
+                result.achieveTime *= TimeSpan.TicksPerSecond;
+                var achieveTime = result.achieveTime;
+                string path = $"{Application.persistentDataPath}/record/{target}";
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                string save_target = $"{path}/{achieveTime}.dat";
+                var jsonData = JsonConvert.SerializeObject(result, Formatting.Indented);
+                File.WriteAllText(save_target, jsonData);
+            }
+            File.Delete(record_path);
+        }
     }
 }

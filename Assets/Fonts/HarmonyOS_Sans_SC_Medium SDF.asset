@@ -84,8 +84,8 @@ Material:
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
+    - _StencilReadMask: 3
+    - _StencilWriteMask: 0
     - _TextureHeight: 4096
     - _TextureWidth: 4096
     - _UnderlayDilate: 0

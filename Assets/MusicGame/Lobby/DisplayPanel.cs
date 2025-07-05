@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
@@ -56,25 +57,29 @@ public class DisplayPanel : MonoBehaviour
         }
         description.text = $"曲师：{author}\n谱师：{mapper}";
 
-        string record_path = $"{Application.persistentDataPath}/record/{BeatmapInfo.beatmap_name}.dat";
         while (recordItemFather.transform.childCount > 0)
         {
             DestroyImmediate(recordItemFather.transform.GetChild(0).gameObject);
         }
-        if (File.Exists(record_path))
+
+        // 读取记录
+        string new_path = $"{Application.persistentDataPath}/record/{BeatmapInfo.beatmap_name}/";
+        if (Directory.Exists(new_path))
         {
-            var data_list = JsonConvert.DeserializeObject<List<BeatmapManager.BeatmapResult>>(File.ReadAllText(record_path));
-            int index = 0;
-            foreach (BeatmapManager.BeatmapResult result in data_list)
+            DirectoryInfo dirInfo = new(new_path);
+            foreach (FileInfo file in dirInfo.GetFiles())
             {
-                GameObject newItem = Instantiate(recordItem, recordItemFather.transform);
-                newItem.SetActive(true);
-                newItem.GetComponent<RecordItem>().beatmapResult = result;
-                newItem.GetComponent<RecordItem>().index = index;
-                index++;
-                if(result.play_records == null)
+                if (file.Name.Split(".").Last() == "dat")
                 {
-                    newItem.GetComponent<RecordItem>().viewRecordButton.SetActive(false);
+                    var data = JsonConvert.DeserializeObject<BeatmapManager.BeatmapResult>(File.ReadAllText(Path.Join(file.DirectoryName, file.Name)));
+                    GameObject newItem = Instantiate(recordItem, recordItemFather.transform);
+                    newItem.SetActive(true);
+                    newItem.GetComponent<RecordItem>().beatmapResult = data;
+                    newItem.GetComponent<RecordItem>().record_identity = file.Name;
+                    if (data.play_records == null)
+                    {
+                        newItem.GetComponent<RecordItem>().viewRecordButton.SetActive(false);
+                    }
                 }
             }
         }

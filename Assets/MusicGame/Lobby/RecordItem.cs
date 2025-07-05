@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class RecordItem : MonoBehaviour
 {
     public BeatmapManager.BeatmapResult beatmapResult;
-    public int index;
+    public string record_identity;
     public TMP_Text maxCombo;
     public TMP_Text achievement;
     public TMP_Text playTime;
@@ -21,7 +21,7 @@ public class RecordItem : MonoBehaviour
     {
         maxCombo.text += beatmapResult.maxCombo.ToString();
         achievement.text = beatmapResult.achievement.ToString("0.0000") + "%";
-        DateTime utcDateTime = new(beatmapResult.achieveTime * TimeSpan.TicksPerSecond, DateTimeKind.Utc);
+        DateTime utcDateTime = new(beatmapResult.achieveTime, DateTimeKind.Utc);
         DateTime localDateTime = utcDateTime.ToLocalTime();
         playTime.text = localDateTime.ToString("yyyy/MM/dd HH:mm:ss");
         int max_rating = beatmapResult.rating;
@@ -38,7 +38,7 @@ public class RecordItem : MonoBehaviour
 
     public void ViewRecordStart()
     {
-        BeatmapInfo.record_index = index;
+        BeatmapInfo.record_identity = record_identity;
         SceneManager.LoadScene("MusicGame");
     }
 }

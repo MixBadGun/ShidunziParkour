@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using SimpleFileBrowser;
 using TMPro;
@@ -33,17 +34,20 @@ public class SingleBeatmapInfo : MonoBehaviour
 
     string dataFolder;
 
-    private void Awake() {
+    private void Awake()
+    {
         dataFolder = $"{Application.persistentDataPath}/music";
     }
 
-    public enum Margin_Type {
+    public enum Margin_Type
+    {
         MIDDLE,
         LEFT,
         RIGHT
     }
 
-    public void SetBackground(Texture2D texture, float alpha = (float)185 / 255, Margin_Type margin_Type = Margin_Type.MIDDLE) {
+    public void SetBackground(Texture2D texture, float alpha = (float)185 / 255, Margin_Type margin_Type = Margin_Type.MIDDLE)
+    {
         if (margin_Type == Margin_Type.MIDDLE)
         {
             backImage.sprite = Sprite.Create(texture,
@@ -75,12 +79,14 @@ public class SingleBeatmapInfo : MonoBehaviour
             );
         }
     }
-    void GetReady(string path){
+    void GetReady(string path)
+    {
         BeatmapInfo.beatmap_name = path;
         LoadMaplist.instance.OpenDisplayPanel();
     }
 
-    void DeleteMap(string path, bool reload = true){
+    void DeleteMap(string path, bool reload = true)
+    {
         FileBrowserHelpers.DeleteDirectory($"{dataFolder}/{path}");
         if (reload)
         {
@@ -112,14 +118,22 @@ public class SingleBeatmapInfo : MonoBehaviour
         descrip_object.text = $"曲师：{beatmapInfo.author}\n谱师：{beatmapInfo.mapper}";
 
         int max_rating = 100;
-        if (File.Exists($"{Application.persistentDataPath}/record/{beatmapInfo.path}.dat"))
+
+        // 读取记录
+        string new_path = $"{Application.persistentDataPath}/record/{beatmapInfo.path}/";
+        if (Directory.Exists(new_path))
         {
-            var data_list = JsonConvert.DeserializeObject<List<BeatmapManager.BeatmapResult>>(File.ReadAllText($"{Application.persistentDataPath}/record/{beatmapInfo.path}.dat"));
-            foreach (BeatmapManager.BeatmapResult result in data_list)
+            DirectoryInfo dirInfo = new(new_path);
+            foreach (FileInfo file in dirInfo.GetFiles())
             {
-                max_rating = Math.Min(max_rating, result.rating);
+                if (file.Name.Split(".").Last() == "dat")
+                {
+                    var data = JsonConvert.DeserializeObject<BeatmapManager.BeatmapResult>(File.ReadAllText(Path.Join(file.DirectoryName, file.Name)));
+                    max_rating = Math.Min(max_rating, data.rating);
+                }
             }
         }
+
         if (max_rating < 15)
         {
             Rating.sprite = Presents[max_rating];
@@ -134,7 +148,8 @@ public class SingleBeatmapInfo : MonoBehaviour
         levelImage.sprite = LevelPresents[(int)beatmapInfo.difficulty];
     }
 
-    public void SwitchDiff(int delta){
+    public void SwitchDiff(int delta)
+    {
         diff_index += delta;
         LoadBeatmapInfo();
     }
