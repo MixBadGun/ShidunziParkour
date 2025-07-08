@@ -279,10 +279,8 @@ public class BeatmapManager : MonoBehaviour
             videoPlayer.url = $"file://{dataFolder}/{beatmap_name}/bg.mp4";
             hasVideo = true;
         }
-        else
-        {
-            BackForVideo.GameObject().SetActive(false);
-        }
+        BackForVideo.GameObject().SetActive(false);
+        videoPlayer.GameObject().SetActive(false);
         if (File.Exists($"{dataFolder}/{beatmap_name}/bg.png"))
         {
             byte[] fileData = File.ReadAllBytes($"{dataFolder}/{beatmap_name}/bg.png");
@@ -766,11 +764,22 @@ public class BeatmapManager : MonoBehaviour
         {
             if (-BeforeTime + OnPlayingTime >= videoOffset)
             {
+                BackForVideo.GameObject().SetActive(true);
+                videoPlayer.GameObject().SetActive(true);
                 videoPlayer.Play();
-                BackForVideo.GetComponent<AspectRatioFitter>().aspectRatio = (float)videoPlayer.width / videoPlayer.height;
-                BackForVideo2.GetComponent<AspectRatioFitter>().aspectRatio = (float)videoPlayer.width / videoPlayer.height;
+                isVideoPlaying = true;
             }
         }
+        if (hasVideo && isVideoPlaying)
+        {
+            BackForVideo.GetComponent<AspectRatioFitter>().aspectRatio = (float)videoPlayer.width / videoPlayer.height;
+            BackForVideo2.GetComponent<AspectRatioFitter>().aspectRatio = (float)videoPlayer.width / videoPlayer.height;
+        }
+    }
+
+    public static bool IsVideoPlaying()
+    {
+        return Instance.isVideoPlaying;
     }
 
     void MusicAndTimeAndSaveHandle()

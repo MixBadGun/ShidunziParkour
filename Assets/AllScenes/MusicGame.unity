@@ -6383,6 +6383,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MusicPlayer: {fileID: 2025544663}
   PauseUI: {fileID: 1366090250}
+  videoPlayer: {fileID: 1955241830}
 --- !u!1 &1118397049
 GameObject:
   m_ObjectHideFlags: 0

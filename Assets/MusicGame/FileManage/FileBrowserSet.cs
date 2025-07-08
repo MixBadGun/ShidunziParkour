@@ -136,6 +136,7 @@ public class FileBrowserSet : MonoBehaviour
 	void OnFilesSelected(string[] filePaths)
 	{
 		LoadFiles(filePaths);
+		SceneManager.LoadScene("MusicLobby");
 	}
 	
 	public static void LoadFiles( string[] filePaths )
@@ -154,6 +155,5 @@ public class FileBrowserSet : MonoBehaviour
 				case "sdp": LoadMapPacks(file_dir); break;
 			}
 		}
-		SceneManager.LoadScene("MusicLobby");
 	}
 }

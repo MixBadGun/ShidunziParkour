@@ -1,14 +1,20 @@
 using UnityEngine;
+using UnityEngine.Video;
 
 public class MusicCommandSet : MonoBehaviour
 {
     public AudioSource MusicPlayer;
     public GameObject PauseUI;
+    public VideoPlayer videoPlayer;
 
     public void Pause()
     {
         Time.timeScale = 0;
         MusicPlayer.Pause();
+        if (BeatmapManager.IsVideoPlaying())
+        {
+            videoPlayer.Pause();
+        }
         PauseUI.SetActive(true);
     }
 
@@ -16,6 +22,10 @@ public class MusicCommandSet : MonoBehaviour
     {
         Time.timeScale = 1;
         MusicPlayer.UnPause();
+        if (BeatmapManager.IsVideoPlaying())
+        {
+            videoPlayer.Play();
+        }
         PauseUI.SetActive(false);
     }
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using B83.Win32;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DynamicFileManager : MonoBehaviour
 {
@@ -27,5 +28,6 @@ public class DynamicFileManager : MonoBehaviour
     void OnFiles(List<string> aFiles, POINT aPos)
     {
         FileBrowserSet.LoadFiles(aFiles.ToArray());
+        SceneManager.LoadScene("MusicLobby");
     }
 }
