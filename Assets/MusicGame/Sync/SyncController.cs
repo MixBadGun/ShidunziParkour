@@ -11,15 +11,18 @@ public class SyncController : NetworkBehaviour
     public GameObject RetryButton;
     public GameObject RetryBigButton;
     public GameObject PracticeButton;
+    public GameObject ResumeButton;
 
     void Start()
     {
         if (isClient)
         {
             Time.timeScale = 0;
+
             RetryButton.SetActive(false);
             PracticeButton.SetActive(false);
             RetryBigButton.SetActive(false);
+            ResumeButton.SetActive(false);
         }
         if (isServer)
         {

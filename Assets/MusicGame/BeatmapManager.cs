@@ -85,6 +85,7 @@ public class BeatmapManager : MonoBehaviour
 
     public MusicCamera camera;
     public LandGenerator landGenerator;
+    public GameObject PauseUI;
 
     // 自动游玩变量
     bool last_record = false;
@@ -644,6 +645,7 @@ public class BeatmapManager : MonoBehaviour
         MusicPlayer.Pause();
         Time.timeScale = 0;
         GetIntoButton.SetActive(false);
+        PauseUI.SetActive(false);
     }
 
     // Start is called before the first frame update
@@ -789,6 +791,7 @@ public class BeatmapManager : MonoBehaviour
             MapInfo.SetTrigger("ResultTrigger");
             if (!isAutoPlay
                 && !DataStorager.settings.relaxMod
+                // && !DataStorager.settings.fixedCameraMod
                 && !DataStorager.settings.cinemaMod
                 && !isPractcing
                 && !(DateTime.Now.Day == 1 && DateTime.Now.Month == 4)

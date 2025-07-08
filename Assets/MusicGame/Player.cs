@@ -31,6 +31,9 @@ public class Player : MonoBehaviour
     private bool isFlying = false;
     private List<FromTo> movementList = new();
 
+    public Animator[] TouchAnimators;
+    public GameObject PreventTouchBox;
+
     public List<InputImpluse> inputImpluses = new();
 
     void CreateNewInputImpluse(int num) {
@@ -276,7 +279,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void handleFingerInput()
+    void FingerBySlide()
     {
         foreach (Touch touch in Input.touches)
         {
@@ -304,6 +307,86 @@ public class Player : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    enum TouchDirection {
+        UP,
+        RIGHT,
+        DOWN,
+        LEFT
+    }
+
+    TouchDirection CalcDirectionByPos(Vector2 pos) {
+        Vector2 a = new(0, 0);
+        Vector2 b = new(Screen.width, 0);
+        Vector2 c = new(Screen.width, Screen.height);
+        Vector2 d = new(0, Screen.height);
+
+        bool right = Cross(b - pos, d - pos) > 0;
+        bool up = Cross(a - pos, c - pos) > 0;
+        if (right)
+        {
+            if (up)
+            {
+                return TouchDirection.LEFT;
+            }
+            return TouchDirection.DOWN;
+        }
+        if (up)
+        {
+            return TouchDirection.UP;
+        }
+        return TouchDirection.RIGHT;
+    }
+
+    private float Cross(Vector2 a, Vector2 b)
+    {
+        return a.x * b.y - a.y * b.x;
+    }
+
+    bool WithInPreventBox(Vector2 pos) {
+        RectTransform rectTrans = PreventTouchBox.GetComponent<RectTransform>();
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTrans,
+            pos,
+            null,
+            out Vector2 localPos
+        );
+        return rectTrans.rect.Contains(localPos);
+    }
+
+    void FingerByTouch()
+    {
+        foreach (Touch touch in Input.touches)
+        {
+            if (touch.phase == TouchPhase.Began)
+            {
+                if (WithInPreventBox(touch.position))
+                {
+                    return;
+                }
+                switch (CalcDirectionByPos(touch.position))
+                {
+                    case TouchDirection.UP: TouchAnimators[0].SetTrigger("ArrowTrigger"); moveUp(); break;
+                    case TouchDirection.RIGHT: TouchAnimators[1].SetTrigger("ArrowTrigger"); moveRight(); break;
+                    case TouchDirection.DOWN: TouchAnimators[2].SetTrigger("ArrowTrigger"); moveDown(); break;
+                    case TouchDirection.LEFT: TouchAnimators[3].SetTrigger("ArrowTrigger"); moveLeft(); break;
+                }
+            }
+        }
+    }
+
+    void handleFingerInput()
+    {
+        if (Time.timeScale <= 0)
+        {
+            return;
+        }
+        switch (DataStorager.settings.touchControlMode)
+        {
+            case DataManager.TouchControlMode.TAP: FingerByTouch(); break;
+            case DataManager.TouchControlMode.SLIDE: FingerBySlide(); break;
         }
     }
 
@@ -340,30 +423,38 @@ public class Player : MonoBehaviour
     void handleKeyInput()
     {
         KeyCode[] leftKeys = DataStorager.keysettings.left;
-        foreach( KeyCode key in leftKeys ){
-            if(Input.GetKeyDown(key)){
-                 moveLeft(key);
+        foreach (KeyCode key in leftKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                moveLeft(key);
             }
         }
 
         KeyCode[] rightKeys = DataStorager.keysettings.right;
-        foreach( KeyCode key in rightKeys ){
-            if(Input.GetKeyDown(key)){
-                 moveRight(key);
+        foreach (KeyCode key in rightKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                moveRight(key);
             }
         }
 
         KeyCode[] upKeys = DataStorager.keysettings.up;
-        foreach( KeyCode key in upKeys ){
-            if(Input.GetKeyDown(key)){
-                 moveUp(key);
+        foreach (KeyCode key in upKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                moveUp(key);
             }
         }
 
         KeyCode[] downKeys = DataStorager.keysettings.down;
-        foreach( KeyCode key in downKeys ){
-            if(Input.GetKeyDown(key)){
-                 moveDown(key);
+        foreach (KeyCode key in downKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                moveDown(key);
             }
         }
     }

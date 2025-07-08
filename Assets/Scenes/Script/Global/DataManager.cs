@@ -6,36 +6,43 @@ public class DataManager
 {
     public static string dataFolder = $"{Application.persistentDataPath}/save";
 
-    public static bool IsDataed(string filename){
+    public static bool IsDataed(string filename)
+    {
         string path = $"{dataFolder}/{filename}.dat";
         return File.Exists(path);
     }
 
-    public static void Save<T>(string filename, T data){
+    public static void Save<T>(string filename, T data)
+    {
         string path = $"{dataFolder}/{filename}.dat";
-        if(!Directory.Exists(dataFolder)){
+        if (!Directory.Exists(dataFolder))
+        {
             Directory.CreateDirectory(dataFolder);
         }
         var jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
 
-        File.WriteAllText(path,jsonData);
+        File.WriteAllText(path, jsonData);
     }
 
-    public static T Load<T>(string filename){
+    public static T Load<T>(string filename)
+    {
         string path = $"{dataFolder}/{filename}.dat";
-        if(!File.Exists(path)){
+        if (!File.Exists(path))
+        {
             return default;
         }
         var jsonData = JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
         return jsonData;
     }
 
-    public struct Item {
+    public struct Item
+    {
         public string name;
         public int count;
     }
 
-    public struct ConnectionInfo {
+    public struct ConnectionInfo
+    {
         public string ip;
         public ushort port;
         public string playerID;
@@ -60,9 +67,13 @@ public class DataManager
         public bool fpsDisplay;
         public int fpsLimit;
         public bool hideKeyDisplay;
+        public bool fixedCameraMod;
+        public TouchControlMode touchControlMode;
     }
 
-    public struct KeySettings {
+    public struct KeySettings
+    {
+        public KeyCode[] esc;
         public KeyCode[] left;
         public KeyCode[] right;
         public KeyCode[] up;
@@ -72,8 +83,15 @@ public class DataManager
         public KeyCode[] pad3;
     }
 
-    public struct HistoryRecord {
+    public struct HistoryRecord
+    {
         public bool isOldPlayer;
         public bool isHaveNewSkin;
+    }
+
+    public enum TouchControlMode
+    {
+        TAP,
+        SLIDE
     }
 }

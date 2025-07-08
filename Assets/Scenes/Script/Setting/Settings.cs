@@ -25,10 +25,13 @@ public class Settings : MonoBehaviour
     public Toggle RelaxMod;
     public Toggle CinemaMod;
     public Toggle HideKeyDisplay;
+    public Toggle FixedCameraMod;
     public InputField MusicGameOffsetMs;
     public TMP_Dropdown SkinDropdown;
+    public TMP_Dropdown TouchModeDropdown;
     List<string> subfolders;
-    void Awake(){
+    void Awake()
+    {
         MusicVolume.value = DataStorager.settings.MusicVolume;
         SoundVolume.value = DataStorager.settings.SoundVolume;
         hasMotionBlur.isOn = DataStorager.settings.hasMotionBlur;
@@ -42,14 +45,20 @@ public class Settings : MonoBehaviour
         HideKeyDisplay.isOn = DataStorager.settings.hideKeyDisplay;
         MaxLife.text = DataStorager.maxLife.count.ToString();
         MusicGameOffsetMs.text = DataStorager.settings.offsetMs.ToString();
-        if(DataStorager.settings.CustomMaxLife > 0){
+        if (DataStorager.settings.CustomMaxLife > 0)
+        {
             CustomMaxLife.text = DataStorager.settings.CustomMaxLife.ToString();
-        } else {
+        }
+        else
+        {
             CustomMaxLife.text = DataStorager.maxLife.count.ToString();
         }
-        if(DataStorager.settings.MusicGameSpeed > 0){
+        if (DataStorager.settings.MusicGameSpeed > 0)
+        {
             MusicGameSpeed.text = DataStorager.settings.MusicGameSpeed.ToString();
-        } else {
+        }
+        else
+        {
             MusicGameSpeed.text = "1";
         }
         fpsDisplay.isOn = DataStorager.settings.fpsDisplay;
@@ -58,16 +67,29 @@ public class Settings : MonoBehaviour
         // 皮肤
         string skinFolder = $"{Application.persistentDataPath}/skin";
         string[] subfolderPaths = Directory.GetDirectories(skinFolder, "*", SearchOption.TopDirectoryOnly);
-        for(int i = 0;i < subfolderPaths.Count(); i++){
+        for (int i = 0; i < subfolderPaths.Count(); i++)
+        {
             subfolderPaths[i] = Path.GetFileName(subfolderPaths[i]);
         }
-        subfolders = new(subfolderPaths);
+        List<string> sec_subfolderPaths = new(subfolderPaths);
+        if (sec_subfolderPaths.Contains("Default Classic"))
+        {
+            sec_subfolderPaths.Remove("Default Classic");
+        }
+        subfolders = new(sec_subfolderPaths);
         SkinDropdown.AddOptions(subfolders);
-        if(subfolders.Contains(DataStorager.settings.skinPath)){
+        if (subfolders.Contains(DataStorager.settings.skinPath))
+        {
             SkinDropdown.value = subfolders.IndexOf(DataStorager.settings.skinPath) + 1;
-        } else {
+        }
+        else
+        {
             SkinDropdown.value = 0;
         }
+
+        TouchModeDropdown.value = (int)DataStorager.settings.touchControlMode;
+
+        FixedCameraMod.isOn = DataStorager.settings.fixedCameraMod;
     }
 
     public void SaveAndExit(){
@@ -125,6 +147,10 @@ public class Settings : MonoBehaviour
         }
         // 皮肤
         DataStorager.settings.skinPath = SkinDropdown.options[SkinDropdown.value].text;
+        // 触摸模式
+        DataStorager.settings.touchControlMode = (DataManager.TouchControlMode)TouchModeDropdown.value;
+
+        DataStorager.settings.fixedCameraMod = FixedCameraMod.isOn;
         // 保存
         DataStorager.SaveSettings();
         DataStorager.SaveKeySettings();

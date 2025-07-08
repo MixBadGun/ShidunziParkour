@@ -19,28 +19,41 @@ public class SkinLoader : MonoBehaviour
 
     void Awake()
     {
+        LoadSkin("Default Classic", true);
+        LoadSkin(DataStorager.settings.skinPath);
+    }
+
+    void LoadSkin(string select_skin_path, bool skip_beatmap_skin = false)
+    {
         dataFolder = $"{Application.persistentDataPath}/skin";
 
-        string skin_path = $"{dataFolder}/{DataStorager.settings.skinPath}";
+        string skin_path = $"{dataFolder}/{select_skin_path}";
 
         bool isCustomSkin = false;
 
-        if(!DataStorager.settings.notBeatmapSkin){
-            string beatmap_skin_path = $"{Application.persistentDataPath}/music/{BeatmapInfo.beatmap_name}/skin";
-            if(Directory.Exists(beatmap_skin_path)){
-                skin_path = beatmap_skin_path;
-                isCustomSkin = true;
+        if (!skip_beatmap_skin){
+            if (!DataStorager.settings.notBeatmapSkin)
+            {
+                string beatmap_skin_path = $"{Application.persistentDataPath}/music/{BeatmapInfo.beatmap_name}/skin";
+                if (Directory.Exists(beatmap_skin_path))
+                {
+                    skin_path = beatmap_skin_path;
+                    isCustomSkin = true;
+                }
             }
         }
 
-        if(!isCustomSkin){
-            if(DataStorager.settings.skinPath == ""){
-                return;
+        if (!isCustomSkin)
+            {
+                if (select_skin_path == "")
+                {
+                    return;
+                }
+                if (!Directory.Exists(skin_path))
+                {
+                    return;
+                }
             }
-            if(!Directory.Exists(skin_path)){
-                return;
-            }
-        }
 
         // 加载皮肤
         if(File.Exists($"{skin_path}/track.png")){

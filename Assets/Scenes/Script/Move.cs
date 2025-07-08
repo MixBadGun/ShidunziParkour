@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class Move : MonoBehaviour
 {
@@ -47,7 +48,17 @@ public class Move : MonoBehaviour
 	private float maxReachedSpeed = 0; // 最大速度显示
 
     private float move_timer = 0f; // 计时器
-    // Star is called once before the first execution of Update after the MonoBehaviour is created
+
+    private XinputControls xinputActions;
+
+    public Animator[] TouchAnimators;
+    public GameObject PreventTouchBox;
+
+    void Awake()
+    {
+        xinputActions = new XinputControls();
+    }
+
     void Start()
     {
         if(DataStorager.settings.CustomMaxLife > 0){
@@ -143,6 +154,7 @@ public class Move : MonoBehaviour
         {
             handleKeyInput();
             handleFingerInput();
+            handleStickInput();
             updatePosHorizon();
             KeepRunning();
             ComsumeBuff();
@@ -198,9 +210,75 @@ public class Move : MonoBehaviour
         }
     }
 
-    void handleFingerInput()
+    enum TouchDirection {
+        UP,
+        RIGHT,
+        DOWN,
+        LEFT
+    }
+
+    TouchDirection CalcDirectionByPos(Vector2 pos) {
+        Vector2 a = new(0, 0);
+        Vector2 b = new(Screen.width, 0);
+        Vector2 c = new(Screen.width, Screen.height);
+        Vector2 d = new(0, Screen.height);
+
+        bool right = Cross(b - pos, d - pos) > 0;
+        bool up = Cross(a - pos, c - pos) > 0;
+        if (right)
+        {
+            if (up)
+            {
+                return TouchDirection.LEFT;
+            }
+            return TouchDirection.DOWN;
+        }
+        if (up)
+        {
+            return TouchDirection.UP;
+        }
+        return TouchDirection.RIGHT;
+    }
+
+    private float Cross(Vector2 a, Vector2 b)
     {
-        // 还是保持和音游判定相同了。
+        return a.x * b.y - a.y * b.x;
+    }
+
+    bool WithInPreventBox(Vector2 pos) {
+        RectTransform rectTrans = PreventTouchBox.GetComponent<RectTransform>();
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTrans,
+            pos,
+            null,
+            out Vector2 localPos
+        );
+        return rectTrans.rect.Contains(localPos);
+    }
+
+    void FingerByTouch()
+    {
+        foreach (Touch touch in Input.touches)
+        {
+            if (touch.phase == TouchPhase.Began)
+            {
+                if (WithInPreventBox(touch.position))
+                {
+                    return;
+                }
+                switch (CalcDirectionByPos(touch.position))
+                {
+                    case TouchDirection.UP: TouchAnimators[0].SetTrigger("ArrowTrigger"); moveUp(); break;
+                    case TouchDirection.RIGHT: TouchAnimators[1].SetTrigger("ArrowTrigger"); moveRight(); break;
+                    case TouchDirection.DOWN: TouchAnimators[2].SetTrigger("ArrowTrigger"); moveDown(); break;
+                    case TouchDirection.LEFT: TouchAnimators[3].SetTrigger("ArrowTrigger"); moveLeft(); break;
+                }
+            }
+        }
+    }
+
+    void FingerBySlide()
+    {
         foreach (Touch touch in Input.touches)
         {
             if (touch.phase == TouchPhase.Began)
@@ -233,34 +311,21 @@ public class Move : MonoBehaviour
         }
     }
 
+    void handleFingerInput()
+    {
+        if (Time.timeScale <= 0)
+        {
+            return;
+        }
+        switch (DataStorager.settings.touchControlMode)
+        {
+            case DataManager.TouchControlMode.TAP: FingerByTouch(); break;
+            case DataManager.TouchControlMode.SLIDE: FingerBySlide(); break;
+        }
+    }
+
     void handleKeyInput()
     {
-        // if (Input.GetButtonDown("Horizontal"))
-        // {
-        //     if (Input.GetAxisRaw("Horizontal") < 0)
-        //     {
-        //         moveLeft();
-        //     }
-        //     else
-        //     {
-        //         moveRight();
-        //     }
-        // }
-        // if (Input.GetButtonDown("Jump"))
-        // {
-        //     moveUp();
-        // }
-        // if (Input.GetButtonDown("Vertical"))
-        // {
-        //     if (Input.GetAxisRaw("Vertical") < 0)
-        //     {
-        //         moveDown();
-        //     }
-        //     else
-        //     {
-        //         moveUp();
-        //     }
-        // }
         KeyCode[] leftKeys = DataStorager.keysettings.left;
         foreach( KeyCode key in leftKeys ){
             if(Input.GetKeyDown(key)){
@@ -288,6 +353,11 @@ public class Move : MonoBehaviour
                  moveDown();
             }
         }
+    }
+
+    void handleStickInput()
+    {
+        Debug.Log($"{xinputActions.Xinput.HorizonMove.ReadValue<float>()}, {xinputActions.Xinput.VerticalMove.ReadValue<float>()}");
     }
 
     float CalcOffsetByTimer()
@@ -359,7 +429,7 @@ public class Move : MonoBehaviour
         if (checkGrouned())
         {
             // the_rigidbody.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
-            velocity += new Vector3(0,20,0);
+            velocity += new Vector3(0, 20, 0);
             isFlying = true;
             // isGrounded = false;
         }

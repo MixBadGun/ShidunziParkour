@@ -108,6 +108,7 @@ public class DataStorager : MonoBehaviour
 
   public static KeySettings GetDefaultKeySettings(){
     return new (){
+        esc = new KeyCode[]{ KeyCode.Escape },
         left = new KeyCode[]{ KeyCode.A, KeyCode.LeftArrow },
         right = new KeyCode[]{ KeyCode.D, KeyCode.RightArrow },
         up = new KeyCode[]{ KeyCode.Space, KeyCode.W, KeyCode.UpArrow},

@@ -6,16 +6,34 @@ public class PauseUI : MonoBehaviour
 {
     public GameObject PausePanel;
     public AudioSource BGM;
+    public Move player;
 
-    void Start() {
+    void Awake() {
         PausePanel.SetActive(false);
     }
 
-    public void TogglePause(){
-        if(PausePanel.activeSelf){
+    void Update()
+    {
+        KeyCode[] escKeys = DataStorager.keysettings.esc;
+        foreach( KeyCode key in escKeys ){
+            if(Input.GetKeyDown(key)){
+                TogglePause();
+            }
+        }
+    }
+
+    public void TogglePause()
+    {
+        if (PausePanel.activeSelf)
+        {
             Time.timeScale = 1;
-            BGM.Play();
-        } else {
+            if (player.isAlive())
+            {
+                BGM.UnPause();
+            }
+        }
+        else
+        {
             Time.timeScale = 0;
             BGM.Pause();
         }

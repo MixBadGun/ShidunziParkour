@@ -20,8 +20,11 @@ public class MusicCamera : MonoBehaviour
     private float trans_cross_time = 1f;
     private float trans_timer = 1f;
 
+    private Vector3 fixedInitPosition;
+
     void Start()
     {
+        fixedInitPosition = transform.position;
         offset = transform.position - center.transform.position;
         initRotation = transform.rotation.eulerAngles;
     }
@@ -30,12 +33,21 @@ public class MusicCamera : MonoBehaviour
     void LateUpdate()
     {
         transform.position = center.transform.position + offset;
+        fixedCamera();
         moveCamera();
+    }
+
+    void fixedCamera(){
+        if (DataStorager.settings.fixedCameraMod)
+        {
+            transform.position = new Vector3(fixedInitPosition.x, transform.position.y, transform.position.z);
+        }
     }
 
     public void triggerShake()
     {
-        if(!DataStorager.settings.notShake){
+        if (!DataStorager.settings.notShake)
+        {
             toShake = true;
         }
     }
