@@ -26,6 +26,7 @@ public class Settings : MonoBehaviour
     public Toggle CinemaMod;
     public Toggle HideKeyDisplay;
     public Toggle FixedCameraMod;
+    public Toggle UseGamePad;
     public InputField MusicGameOffsetMs;
     public TMP_Dropdown SkinDropdown;
     public TMP_Dropdown TouchModeDropdown;
@@ -90,6 +91,7 @@ public class Settings : MonoBehaviour
         TouchModeDropdown.value = (int)DataStorager.settings.touchControlMode;
 
         FixedCameraMod.isOn = DataStorager.settings.fixedCameraMod;
+        UseGamePad.isOn = DataStorager.settings.useGamepad;
     }
 
     public void SaveAndExit(){
@@ -151,6 +153,8 @@ public class Settings : MonoBehaviour
         DataStorager.settings.touchControlMode = (DataManager.TouchControlMode)TouchModeDropdown.value;
 
         DataStorager.settings.fixedCameraMod = FixedCameraMod.isOn;
+
+        DataStorager.settings.useGamepad = UseGamePad.isOn;
         // 保存
         DataStorager.SaveSettings();
         DataStorager.SaveKeySettings();

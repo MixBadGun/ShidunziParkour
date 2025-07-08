@@ -41,85 +41,83 @@ public class KeySetSettings : MonoBehaviour
         }
         foreach (KeyCode keyCode in Enum.GetValues(typeof(KeyCode)))
         {
-            if (Input.GetKeyDown(keyCode))
+            if (!Input.GetKeyDown(keyCode)) continue;
+            switch (index)
             {
-                switch (index)
-                {
-                    case 0:
-                        {
-                            List<KeyCode> codes = new(DataStorager.keysettings.left)
-                        {
-                            keyCode
-                        };
-                            DataStorager.keysettings.left = codes.ToArray();
-                            break;
-                        }
-                    case 1:
-                        {
-                            List<KeyCode> codes = new(DataStorager.keysettings.right)
-                        {
-                            keyCode
-                        };
-                            DataStorager.keysettings.right = codes.ToArray();
-                            break;
-                        }
-                    case 2:
-                        {
-                            List<KeyCode> codes = new(DataStorager.keysettings.up)
-                        {
-                            keyCode
-                        };
-                            DataStorager.keysettings.up = codes.ToArray();
-                            break;
-                        }
-                    case 3:
-                        {
-                            List<KeyCode> codes = new(DataStorager.keysettings.down)
-                        {
-                            keyCode
-                        };
-                            DataStorager.keysettings.down = codes.ToArray();
-                            break;
-                        }
-                    case 4:
-                        {
-                            List<KeyCode> codes = new(DataStorager.keysettings.pad1)
-                        {
-                            keyCode
-                        };
-                            DataStorager.keysettings.pad1 = codes.ToArray();
-                            break;
-                        }
-                    case 5:
-                        {
-                            List<KeyCode> codes = new(DataStorager.keysettings.pad2)
-                        {
-                            keyCode
-                        };
-                            DataStorager.keysettings.pad2 = codes.ToArray();
-                            break;
-                        }
-                    case 6:
-                        {
-                            List<KeyCode> codes = new(DataStorager.keysettings.pad3)
-                        {
-                            keyCode
-                        };
-                            DataStorager.keysettings.pad3 = codes.ToArray();
-                            break;
-                        }
-                    case 7:
-                        {
-                            List<KeyCode> codes = new(DataStorager.keysettings.esc)
-                        {
-                            keyCode
-                        };
-                            DataStorager.keysettings.esc = codes.ToArray();
-                            break;
-                        }
-                }
-                break;
+                case 0:
+                    {
+                        List<KeyCode> codes = new(DataStorager.keysettings.left)
+                    {
+                        keyCode
+                    };
+                        DataStorager.keysettings.left = codes.ToArray();
+                        break;
+                    }
+                case 1:
+                    {
+                        List<KeyCode> codes = new(DataStorager.keysettings.right)
+                    {
+                        keyCode
+                    };
+                        DataStorager.keysettings.right = codes.ToArray();
+                        break;
+                    }
+                case 2:
+                    {
+                        List<KeyCode> codes = new(DataStorager.keysettings.up)
+                    {
+                        keyCode
+                    };
+                        DataStorager.keysettings.up = codes.ToArray();
+                        break;
+                    }
+                case 3:
+                    {
+                        List<KeyCode> codes = new(DataStorager.keysettings.down)
+                    {
+                        keyCode
+                    };
+                        DataStorager.keysettings.down = codes.ToArray();
+                        break;
+                    }
+                case 4:
+                    {
+                        List<KeyCode> codes = new(DataStorager.keysettings.pad1)
+                    {
+                        keyCode
+                    };
+                        DataStorager.keysettings.pad1 = codes.ToArray();
+                        break;
+                    }
+                case 5:
+                    {
+                        List<KeyCode> codes = new(DataStorager.keysettings.pad2)
+                    {
+                        keyCode
+                    };
+                        DataStorager.keysettings.pad2 = codes.ToArray();
+                        break;
+                    }
+                case 6:
+                    {
+                        List<KeyCode> codes = new(DataStorager.keysettings.pad3)
+                    {
+                        keyCode
+                    };
+                        DataStorager.keysettings.pad3 = codes.ToArray();
+                        break;
+                    }
+                case 7:
+                    {
+                        List<KeyCode> codes = new(DataStorager.keysettings.esc)
+                    {
+                        keyCode
+                    };
+                        DataStorager.keysettings.esc = codes.ToArray();
+                        break;
+                    }
             }
+            break;
         }
         WaitForKeyDisplay.SetActive(false);
     }

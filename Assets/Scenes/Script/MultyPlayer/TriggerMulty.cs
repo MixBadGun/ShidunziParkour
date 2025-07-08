@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using kcp2k;
 using Mirror;
@@ -45,6 +46,11 @@ public class TriggerMulty : MonoBehaviour
                 MultyObject.networkAddress = serverip;
                 MultyObject.GetComponent<KcpTransport>().port = port;
                 StartServer();
+            }
+            // 加载文件
+            if (new[] { ".sdx", ".sdp" }.Contains(Path.GetExtension(args[1]).ToLower()))
+            {
+                FileBrowserSet.LoadFiles(new string[] { args[1] });
             }
         }
         playerIDInput.text = DataStorager.coninfo.playerID;

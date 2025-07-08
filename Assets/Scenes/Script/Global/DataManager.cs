@@ -68,6 +68,7 @@ public class DataManager
         public int fpsLimit;
         public bool hideKeyDisplay;
         public bool fixedCameraMod;
+        public bool useGamepad;
         public TouchControlMode touchControlMode;
     }
 

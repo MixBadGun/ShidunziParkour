@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using static InputStruct;
+using TouchPhase = UnityEngine.TouchPhase;
 
 public class Player : MonoBehaviour
 {
@@ -36,6 +38,26 @@ public class Player : MonoBehaviour
 
     public List<InputImpluse> inputImpluses = new();
 
+    private XinputControls xinputActions;
+
+    void Awake()
+    {
+        xinputActions = new XinputControls();
+        if (Gamepad.current != null && DataStorager.settings.useGamepad)
+        {
+            xinputActions.Enable();
+        }
+
+        float speed = DataStorager.settings.MusicGameSpeed > 0 ? DataStorager.settings.MusicGameSpeed : 1;
+        velocity.z = 50 * speed;
+        targetPlayer = this;
+    }
+
+    private void OnDestroy()
+    {
+        xinputActions.Disable();
+    }
+
     void CreateNewInputImpluse(int num) {
         inputImpluses.Add(
             new InputImpluse(){
@@ -52,13 +74,6 @@ public class Player : MonoBehaviour
             }
             inputImpluses.RemoveAt(0);
         }
-    }
-
-    void Awake()
-    {
-        float speed = DataStorager.settings.MusicGameSpeed > 0 ? DataStorager.settings.MusicGameSpeed : 1;
-        velocity.z = 50 * speed;
-        targetPlayer = this;
     }
 
     IEnumerator FixPos(){
@@ -114,12 +129,53 @@ public class Player : MonoBehaviour
         center.transform.rotation = Quaternion.Euler(all_timer * velocity.z * 32,0,0);
     }
 
+    private int jump_level = 0;
+    private float clear_time = 0.25f;
+    void handleStickInput()
+    {
+        if (!xinputActions.Xinput.enabled)
+        {
+            return;
+        }
+        int track = (int)(((xinputActions.Xinput.HorizonMove.ReadValue<float>() + 1f) / 2.0f * MAX_TRACKS) + 1f);
+        if (track > MAX_TRACKS)
+        {
+            track -= 1;
+        }
+        if (track != now_track)
+        {
+            moveToIndex(track);
+        }
+
+        // 按秒数记录跳跃，每 0.2 一个跳跃级别
+        if (clear_time <= 0)
+        {
+            jump_level = 0;
+        }
+        else
+        {
+            clear_time -= Time.deltaTime;
+        }
+        if (xinputActions.Xinput.VerticalMove.ReadValue<float>() > 0.2 * jump_level)
+        {
+            moveUp();
+            jump_level++;
+            clear_time = 0.2f;
+        }
+        if (xinputActions.Xinput.VerticalMove.ReadValue<float>() < 0)
+        {
+            moveDown();
+        }
+    }
+
     void Update()
     {
         loosen_time += Time.deltaTime;
         handleKeyInput();
         handleFingerInput();
-        if(DataStorager.settings.relaxMod){
+        handleStickInput();
+        if (DataStorager.settings.relaxMod)
+        {
             handleNumInput();
         }
         updateGravity();

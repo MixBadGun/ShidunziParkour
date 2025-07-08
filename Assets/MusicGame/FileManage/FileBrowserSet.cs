@@ -9,28 +9,30 @@ using static LevelDisplayer;
 
 public class FileBrowserSet : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        FileBrowser.SetFilters( true, new FileBrowser.Filter( "Shidunzi Beatmap File", ".sdx"), new FileBrowser.Filter( "Shidunzi Beatmap Files Pack", ".sdp") );
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void openFileDialog(){
-        StartCoroutine(ShowLoadDialogCoroutine());
-    }
-
-    IEnumerator ShowLoadDialogCoroutine()
+	// Start is called before the first frame update
+	void Start()
 	{
-		yield return FileBrowser.WaitForLoadDialog( FileBrowser.PickMode.Files, true, null, null, "Select Files", "Load" );
+		FileBrowser.SetFilters(true, new FileBrowser.Filter("Shidunzi Beatmap File", ".sdx"), new FileBrowser.Filter("Shidunzi Beatmap Files Pack", ".sdp"));
+	}
 
-		if( FileBrowser.Success ){
-			OnFilesSelected( FileBrowser.Result );
+	// Update is called once per frame
+	void Update()
+	{
+
+	}
+
+	public void openFileDialog()
+	{
+		StartCoroutine(ShowLoadDialogCoroutine());
+	}
+
+	IEnumerator ShowLoadDialogCoroutine()
+	{
+		yield return FileBrowser.WaitForLoadDialog(FileBrowser.PickMode.Files, true, null, null, "Select Files", "Load");
+
+		if (FileBrowser.Success)
+		{
+			OnFilesSelected(FileBrowser.Result);
 		}
 	}
 
@@ -44,15 +46,16 @@ public class FileBrowserSet : MonoBehaviour
 		}
 		Directory.CreateDirectory(tempPath);
 		string post_dir = $"{dataFolder}/temp.sdx";
-		FileBrowserHelpers.CopyFile(file_dir,post_dir);
+		FileBrowserHelpers.CopyFile(file_dir, post_dir);
 		ZipFile.ExtractToDirectory(post_dir, tempPath);
 		FileBrowserHelpers.DeleteFile(post_dir);
 		string path = $"{dataFolder}/temp/data.sdz";
-		if(!File.Exists(path)){
+		if (!File.Exists(path))
+		{
 			FileBrowserHelpers.DeleteDirectory(tempPath);
 			return;
 		}
-		string title = Random.Range(10000,99999).ToString();
+		string title = Random.Range(10000, 99999).ToString();
 		Difficulty difficulty = Difficulty.NONE;
 		int level = 0;
 		foreach (string line in File.ReadAllText(path).Split("\n"))
@@ -124,13 +127,18 @@ public class FileBrowserSet : MonoBehaviour
 		{
 			if (file.Name.Split(".").Last() == "sdx")
 			{
-				LoadSingleMap(Path.Join(file.DirectoryName,file.Name));
+				LoadSingleMap(Path.Join(file.DirectoryName, file.Name));
 			}
 		}
 		FileBrowserHelpers.DeleteDirectory(tempPath);
 	}
 
-	void OnFilesSelected( string[] filePaths )
+	void OnFilesSelected(string[] filePaths)
+	{
+		LoadFiles(filePaths);
+	}
+	
+	public static void LoadFiles( string[] filePaths )
 	{
 		string dataFolder = $"{Application.persistentDataPath}/music";
 		if(!Directory.Exists(dataFolder)){

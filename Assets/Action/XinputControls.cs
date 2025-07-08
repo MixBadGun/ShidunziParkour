@@ -72,19 +72,7 @@ public partial class @XinputControls: IInputActionCollection2, IDisposable
             ]
         }
     ],
-    ""controlSchemes"": [
-        {
-            ""name"": ""New Control Scheme"",
-            ""bindingGroup"": ""New Control Scheme"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Gamepad>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                }
-            ]
-        }
-    ]
+    ""controlSchemes"": []
 }");
         // Xinput
         m_Xinput = asset.FindActionMap("Xinput", throwIfNotFound: true);
@@ -206,15 +194,6 @@ public partial class @XinputControls: IInputActionCollection2, IDisposable
         }
     }
     public XinputActions @Xinput => new XinputActions(this);
-    private int m_NewControlSchemeSchemeIndex = -1;
-    public InputControlScheme NewControlSchemeScheme
-    {
-        get
-        {
-            if (m_NewControlSchemeSchemeIndex == -1) m_NewControlSchemeSchemeIndex = asset.FindControlSchemeIndex("New Control Scheme");
-            return asset.controlSchemes[m_NewControlSchemeSchemeIndex];
-        }
-    }
     public interface IXinputActions
     {
         void OnHorizonMove(InputAction.CallbackContext context);

@@ -5,6 +5,8 @@ using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.InputSystem;
+using TouchPhase = UnityEngine.TouchPhase;
 
 public class Move : MonoBehaviour
 {
@@ -57,17 +59,30 @@ public class Move : MonoBehaviour
     void Awake()
     {
         xinputActions = new XinputControls();
+        if (Gamepad.current != null && DataStorager.settings.useGamepad)
+        {
+            xinputActions.Enable();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        xinputActions.Disable();
     }
 
     void Start()
     {
-        if(DataStorager.settings.CustomMaxLife > 0){
+        if (DataStorager.settings.CustomMaxLife > 0)
+        {
             life = DataStorager.settings.CustomMaxLife;
-        } else {
+        }
+        else
+        {
             life = DataStorager.maxLife.count;
         }
-        if(invincible){
-            addBuff("invincible",100000);
+        if (invincible)
+        {
+            addBuff("invincible", 100000);
         }
         // addBuff("invincible",100000);
         // SpeedUp(10);
@@ -355,9 +370,44 @@ public class Move : MonoBehaviour
         }
     }
 
+    private int jump_level = 0;
+    private float clear_time = 0.25f;
     void handleStickInput()
     {
-        Debug.Log($"{xinputActions.Xinput.HorizonMove.ReadValue<float>()}, {xinputActions.Xinput.VerticalMove.ReadValue<float>()}");
+        if (!xinputActions.Xinput.enabled)
+        {
+            return;
+        }
+        int track = (int)(((xinputActions.Xinput.HorizonMove.ReadValue<float>() + 1f) / 2.0f * MAX_TRACKS) + 1f);
+        if (track > MAX_TRACKS)
+        {
+            track -= 1;
+        }
+        if (track != now_track)
+        {
+            toMoving = true;
+        }
+        now_track = track;
+
+        // 按秒数记录跳跃，每 0.2 一个跳跃级别
+        if (clear_time <= 0)
+        {
+            jump_level = 0;
+        }
+        else
+        {
+            clear_time -= Time.deltaTime;
+        }
+        if (xinputActions.Xinput.VerticalMove.ReadValue<float>() > 0.2 * jump_level)
+        {
+            moveUp();
+            jump_level++;
+            clear_time = 0.2f;
+        }
+        if (xinputActions.Xinput.VerticalMove.ReadValue<float>() < 0)
+        {
+            moveDown();
+        }
     }
 
     float CalcOffsetByTimer()
