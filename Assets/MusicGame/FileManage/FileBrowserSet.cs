@@ -136,7 +136,7 @@ public class FileBrowserSet : MonoBehaviour
 	void OnFilesSelected(string[] filePaths)
 	{
 		LoadFiles(filePaths);
-		SceneManager.LoadScene("MusicLobby");
+		SceneLoader.LoadMusicLobby();
 	}
 	
 	public static void LoadFiles( string[] filePaths )

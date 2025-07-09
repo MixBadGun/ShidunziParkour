@@ -20,9 +20,10 @@ public class DisplayPanel : MonoBehaviour
 
     public void LoadPanel()
     {
-        string beat_path = $"{Application.persistentDataPath}/music/{BeatmapInfo.beatmap_name}/data.sdz";
+        string beat_path = $"{Application.persistentDataPath}/music/{BeatmapInfo.anBeatmapInfo.path}/data.sdz";
         string author = "";
         string mapper = "";
+
         foreach (string line in File.ReadAllText(beat_path).Split("\n"))
         {
             string[] data = line.Split("=");
@@ -44,6 +45,7 @@ public class DisplayPanel : MonoBehaviour
             if (data[0].Trim() == "level")
             {
                 Level.text = ((int)(float.Parse(data[1].Trim()) / 15 * 100000)).ToString();
+                continue;
             }
             if (data[0].Trim() == "mass")
             {
@@ -53,6 +55,11 @@ public class DisplayPanel : MonoBehaviour
             if (data[0].Trim() == "difficulty")
             {
                 levelImage.sprite = LevelPresents[(int)BeatmapManager.GetDifficulty(data[1].Trim())];
+                continue;
+            }
+            if (data[0].Trim() == "[Data]")
+            {
+                break;
             }
         }
         description.text = $"曲师：{author}\n谱师：{mapper}";
@@ -63,7 +70,7 @@ public class DisplayPanel : MonoBehaviour
         }
 
         // 读取记录
-        string new_path = $"{Application.persistentDataPath}/record/{BeatmapInfo.beatmap_name}/";
+        string new_path = $"{Application.persistentDataPath}/record/{BeatmapInfo.anBeatmapInfo.path}/";
         if (Directory.Exists(new_path))
         {
             DirectoryInfo dirInfo = new(new_path);
@@ -84,7 +91,13 @@ public class DisplayPanel : MonoBehaviour
             }
         }
 
-        string ad_data_path = $"{Application.persistentDataPath}/music/{BeatmapInfo.beatmap_name}/ad.dat";
+        string ad_data_path = $"{Application.persistentDataPath}/music/{BeatmapInfo.anBeatmapInfo.path}/ad.dat";
+        string load_path = BeatmapInfo.anBeatmapInfo.path;
+        if (!File.Exists(ad_data_path))
+        {
+            ad_data_path = $"{Application.persistentDataPath}/music/{BeatmapInfo.anBeatmapInfo.refer_path}/ad.dat";
+            load_path = BeatmapInfo.anBeatmapInfo.refer_path;
+        }
 
         if (File.Exists(ad_data_path))
         {
@@ -100,7 +113,7 @@ public class DisplayPanel : MonoBehaviour
                 GameObject adbar = Instantiate(AdbarTemplate, AdbarList.transform);
                 adbar.GetComponent<Adbar>().targetURL = adInfo.targetURL;
                 adbar.GetComponent<Adbar>().additionalText = adInfo.additionalText;
-                adbar.GetComponent<Adbar>().imagePath = $"{Application.persistentDataPath}/music/{BeatmapInfo.beatmap_name}/" + adInfo.imagePath;
+                adbar.GetComponent<Adbar>().imagePath = $"{Application.persistentDataPath}/music/{load_path}/" + adInfo.imagePath;
                 adbar.SetActive(true);
             }
         }

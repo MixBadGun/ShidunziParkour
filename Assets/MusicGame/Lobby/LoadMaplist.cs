@@ -24,6 +24,8 @@ public class LoadMaplist : MonoBehaviour
         public float BPM;
         public int level;
         public Difficulty difficulty;
+        public Difficulty refer;
+        public string refer_path;
     }
 
     private string dataFolder;
@@ -66,7 +68,8 @@ public class LoadMaplist : MonoBehaviour
             {
                 path = folderName,
                 level = 0,
-                difficulty = Difficulty.NONE
+                difficulty = Difficulty.NONE,
+                refer = Difficulty.NONE
             };
             foreach (string line in File.ReadAllText(beat_path).Split("\n"))
             {
@@ -106,6 +109,15 @@ public class LoadMaplist : MonoBehaviour
                     info.difficulty = BeatmapManager.GetDifficulty(data[1].Trim());
                     continue;
                 }
+                if (data[0].Trim() == "resource_refer")
+                {
+                    info.refer = BeatmapManager.GetDifficulty(data[1].Trim());
+                    continue;
+                }
+                if (data[0].Trim() == "[Data]")
+                {
+                    break;
+                }
             }
             string identify_key = info.title + info.author;
             if (!beatmapInfos.ContainsKey(identify_key))
@@ -117,6 +129,23 @@ public class LoadMaplist : MonoBehaviour
             beatmapInfos[identify_key].Sort(sortComparison);
         }
         bool init = false;
+        
+        foreach (List<AnBeatmapInfo> infos in beatmapInfos.Values)
+        {
+            for (int i = 0; i < infos.Count; i++)
+            {
+                for (int j = 0; j < infos.Count; j++)
+                {
+                    if (infos[i].refer == infos[j].difficulty)
+                    {
+                        var tempInfo = infos[i];
+                        tempInfo.refer_path = infos[j].path;
+                        infos[i] = tempInfo;
+                    }
+                }
+            }
+        }
+
         foreach (List<AnBeatmapInfo> infos in beatmapInfos.Values)
         {
             GameObject item;
@@ -151,9 +180,37 @@ public class LoadMaplist : MonoBehaviour
                 texture.LoadImage(fileData);
                 item.GetComponent<SingleBeatmapInfo>().SetBackground(texture, 1, SingleBeatmapInfo.Margin_Type.RIGHT);
             }
+            else if (File.Exists($"{dataFolder}/{info.path}/special_bar.png"))
+            {
+                byte[] fileData = File.ReadAllBytes($"{dataFolder}/{info.path}/special_bar.png");
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(fileData);
+                item.GetComponent<SingleBeatmapInfo>().SetBackground(texture, 1);
+            }
+            else if (File.Exists($"{dataFolder}/{info.refer_path}/left_special_bar.png"))
+            {
+                byte[] fileData = File.ReadAllBytes($"{dataFolder}/{info.refer_path}/left_special_bar.png");
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(fileData);
+                item.GetComponent<SingleBeatmapInfo>().SetBackground(texture, 1, SingleBeatmapInfo.Margin_Type.LEFT);
+            }
+            else if (File.Exists($"{dataFolder}/{info.refer_path}/right_special_bar.png"))
+            {
+                byte[] fileData = File.ReadAllBytes($"{dataFolder}/{info.refer_path}/right_special_bar.png");
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(fileData);
+                item.GetComponent<SingleBeatmapInfo>().SetBackground(texture, 1, SingleBeatmapInfo.Margin_Type.RIGHT);
+            }
             else if (File.Exists($"{dataFolder}/{info.path}/bg.png"))
             {
                 byte[] fileData = File.ReadAllBytes($"{dataFolder}/{info.path}/bg.png");
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(fileData);
+                item.GetComponent<SingleBeatmapInfo>().SetBackground(texture);
+            }
+            else if (File.Exists($"{dataFolder}/{info.refer_path}/bg.png"))
+            {
+                byte[] fileData = File.ReadAllBytes($"{dataFolder}/{info.refer_path}/bg.png");
                 Texture2D texture = new Texture2D(2, 2);
                 texture.LoadImage(fileData);
                 item.GetComponent<SingleBeatmapInfo>().SetBackground(texture);

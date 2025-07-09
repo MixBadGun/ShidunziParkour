@@ -111,9 +111,9 @@ public class BeatmapManager : MonoBehaviour
             controlDisplay.TriggerKey(keyCode);
         }
         if (isViewingRecord)
-            {
-                return;
-            }
+        {
+            return;
+        }
         play_records.Add(new()
         {
             control_time = GetRealPlayingTime(),
@@ -270,6 +270,17 @@ public class BeatmapManager : MonoBehaviour
         else if (File.Exists($"{dataFolder}/{beatmap_name}/music.ogg"))
         {
             StartCoroutine(LoadMusic($"file://{dataFolder}/{beatmap_name}/music.ogg", AudioType.OGGVORBIS));
+        } else if (File.Exists($"{dataFolder}/{BeatmapInfo.anBeatmapInfo.refer_path}/music.wav"))
+        {
+            StartCoroutine(LoadMusic($"file://{dataFolder}/{BeatmapInfo.anBeatmapInfo.refer_path}/music.wav", AudioType.WAV));
+        }
+        else if (File.Exists($"{dataFolder}/{BeatmapInfo.anBeatmapInfo.refer_path}/music.mp3"))
+        {
+            StartCoroutine(LoadMusic($"file://{dataFolder}/{BeatmapInfo.anBeatmapInfo.refer_path}/music.mp3", AudioType.MPEG));
+        }
+        else if (File.Exists($"{dataFolder}/{BeatmapInfo.anBeatmapInfo.refer_path}/music.ogg"))
+        {
+            StartCoroutine(LoadMusic($"file://{dataFolder}/{BeatmapInfo.anBeatmapInfo.refer_path}/music.ogg", AudioType.OGGVORBIS));
         }
         // 读取图片或视频
         if (File.Exists($"{dataFolder}/{beatmap_name}/bg.mp4"))
@@ -278,12 +289,29 @@ public class BeatmapManager : MonoBehaviour
             videoPlayer.playOnAwake = false;
             videoPlayer.url = $"file://{dataFolder}/{beatmap_name}/bg.mp4";
             hasVideo = true;
+        } else if (File.Exists($"{dataFolder}/{BeatmapInfo.anBeatmapInfo.refer_path}/bg.mp4"))
+        {
+            videoPlayer.targetTexture = (RenderTexture)BackForVideo.texture;
+            videoPlayer.playOnAwake = false;
+            videoPlayer.url = $"file://{dataFolder}/{BeatmapInfo.anBeatmapInfo.refer_path}/bg.mp4";
+            hasVideo = true;
         }
+
         BackForVideo.GameObject().SetActive(false);
         videoPlayer.GameObject().SetActive(false);
         if (File.Exists($"{dataFolder}/{beatmap_name}/bg.png"))
         {
             byte[] fileData = File.ReadAllBytes($"{dataFolder}/{beatmap_name}/bg.png");
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(fileData); // 自动调整纹理大小
+            BackForImage.texture = texture;
+            BackForImage2.texture = texture;
+            BackForImage.GetComponent<AspectRatioFitter>().aspectRatio = (float)texture.width / texture.height;
+            BackForImage2.GetComponent<AspectRatioFitter>().aspectRatio = (float)texture.width / texture.height;
+            DisplayInfoImage.texture = texture;
+            DisplayInfoImage.GetComponent<AspectRatioFitter>().aspectRatio = (float)texture.width / texture.height;
+        } else if (File.Exists($"{dataFolder}/{BeatmapInfo.anBeatmapInfo.refer_path}/bg.png")){
+            byte[] fileData = File.ReadAllBytes($"{dataFolder}/{BeatmapInfo.anBeatmapInfo.refer_path}/bg.png");
             Texture2D texture = new Texture2D(2, 2);
             texture.LoadImage(fileData); // 自动调整纹理大小
             BackForImage.texture = texture;
@@ -307,52 +335,72 @@ public class BeatmapManager : MonoBehaviour
 
         List<SingleBeat> storage_beats = new();
 
+        string title = "";
+        string author = "";
+        bool switchFlag = false;
+        string[] data;
         foreach (string line in File.ReadAllText(path).Split("\n"))
         {
-            string[] data = line.Split("=");
-            if (data[0].Trim() == "bpm")
+            if (!switchFlag)
             {
-                BPM = getValue(data[1], 120);
-                remain_beats.Add(
-                    new SingleBeat()
-                    {
-                        type = B_TYPE.BPM_TYPE,
-                        beat_time = 0,
-                        BPM = getValue(data[1], 120)
-                    }
-                );
+                data = line.Split("=");
+                if (data[0].Trim() == "[Data]")
+                {
+                    switchFlag = true;
+                    continue;
+                }
+                if (data[0].Trim() == "bpm")
+                {
+                    BPM = getValue(data[1], 120);
+                    remain_beats.Add(
+                        new SingleBeat()
+                        {
+                            type = B_TYPE.BPM_TYPE,
+                            beat_time = 0,
+                            BPM = getValue(data[1], 120)
+                        }
+                    );
+                    continue;
+                }
+                if (data[0].Trim() == "offset")
+                {
+                    offset = DataStorager.settings.offsetMs / 1000 + getValue(data[1]);
+                    continue;
+                }
+                if (data[0].Trim() == "bg_offset")
+                {
+                    videoOffset = getValue(data[1]);
+                    continue;
+                }
+                if (data[0].Trim() == "title")
+                {
+                    title = data[1].Trim();
+                    DisplayInfoText.text = data[1].Trim();
+                    continue;
+                }
+                if (data[0].Trim() == "author")
+                {
+                    author = data[1].Trim();
+                    continue;
+                }
+                if (data[0].Trim() == "level")
+                {
+                    levelDisplayer.level = (int)(getValue(data[1]) / 15 * 100000);
+                    continue;
+                }
+                if (data[0].Trim() == "mass")
+                {
+                    levelDisplayer.level = getIntValue(data[1]);
+                    continue;
+                }
+                if (data[0].Trim() == "difficulty")
+                {
+                    levelDisplayer.difficulty = GetDifficulty(data[1].Trim());
+                    continue;
+                }
                 continue;
             }
-            if (data[0].Trim() == "offset")
-            {
-                offset = DataStorager.settings.offsetMs / 1000 + getValue(data[1]);
-                continue;
-            }
-            if (data[0].Trim() == "bg_offset")
-            {
-                videoOffset = getValue(data[1]);
-                continue;
-            }
-            if (data[0].Trim() == "title")
-            {
-                DisplayInfoText.text = data[1].Trim();
-                continue;
-            }
-            if (data[0].Trim() == "level")
-            {
-                levelDisplayer.level = (int)(getValue(data[1]) / 15 * 100000);
-                continue;
-            }
-            if (data[0].Trim() == "mass")
-            {
-                levelDisplayer.level = getIntValue(data[1]);
-                continue;
-            }
-            if (data[0].Trim() == "difficulty")
-            {
-                levelDisplayer.difficulty = GetDifficulty(data[1].Trim());
-                continue;
-            }
+
 
             data = line.Split(",");
             // 石墩音符
@@ -513,7 +561,7 @@ public class BeatmapManager : MonoBehaviour
 
     void LoadViewRecordData()
     {
-        string record_file = $"{Application.persistentDataPath}/record/{BeatmapInfo.beatmap_name}/{BeatmapInfo.record_identity}";
+        string record_file = $"{Application.persistentDataPath}/record/{BeatmapInfo.anBeatmapInfo.path}/{BeatmapInfo.record_identity}";
 
         if (!File.Exists(record_file))
         {
@@ -546,7 +594,6 @@ public class BeatmapManager : MonoBehaviour
         Application.targetFrameRate = DataStorager.settings.fpsLimit > 0 ? DataStorager.settings.fpsLimit : 300;
 
         dataFolder = $"{Application.persistentDataPath}/music";
-        LoadResource(BeatmapInfo.beatmap_name);
 
         if (BeatmapInfo.record_identity != "")
         {
@@ -555,6 +602,8 @@ public class BeatmapManager : MonoBehaviour
         }
 
         LoadBeatmap();
+        LoadResource(BeatmapInfo.anBeatmapInfo.path);
+
         ComboDisplay.SetActive(false);
         ResultCanvas.SetActive(false);
 
@@ -589,7 +638,7 @@ public class BeatmapManager : MonoBehaviour
             DestroyImmediate(noteParent.transform.GetChild(0).gameObject);
         }
         remain_beats.Clear();
-        LoadData(BeatmapInfo.beatmap_name);
+        LoadData(BeatmapInfo.anBeatmapInfo.path);
         remain_beats.Add(
             new SingleBeat()
             {
@@ -1041,7 +1090,7 @@ public class BeatmapManager : MonoBehaviour
     {
         long achieveTime = DateTime.UtcNow.Ticks;
 
-        string path = $"{Application.persistentDataPath}/record/{BeatmapInfo.beatmap_name}";
+        string path = $"{Application.persistentDataPath}/record/{BeatmapInfo.anBeatmapInfo.path}";
         string save_target = $"{path}/{achieveTime}.dat";
         if (!Directory.Exists($"{Application.persistentDataPath}/record/"))
         {

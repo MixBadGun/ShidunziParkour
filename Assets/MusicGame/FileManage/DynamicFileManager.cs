@@ -28,6 +28,6 @@ public class DynamicFileManager : MonoBehaviour
     void OnFiles(List<string> aFiles, POINT aPos)
     {
         FileBrowserSet.LoadFiles(aFiles.ToArray());
-        SceneManager.LoadScene("MusicLobby");
+        SceneLoader.LoadMusicLobby();
     }
 }

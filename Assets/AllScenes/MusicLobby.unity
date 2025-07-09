@@ -1531,8 +1531,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -64.384, y: -50.1}
-  m_SizeDelta: {x: 92.155, y: 92.339}
+  m_AnchoredPosition: {x: -103.02, y: 3.5751}
+  m_SizeDelta: {x: 169.4234, y: 169.77}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &222491076
 MonoBehaviour:
@@ -3537,7 +3537,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &643964859
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6147,7 +6147,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 849647595}
   m_HandleRect: {fileID: 849647594}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8293,7 +8293,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -434.93857}
+  m_AnchoredPosition: {x: 0, y: -432.4569}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1617746418
@@ -8431,7 +8431,6 @@ MonoBehaviour:
   backImage: {fileID: 2096017690}
   Rating: {fileID: 207027291}
   levelImage: {fileID: 673798611}
-  deleteButton: {fileID: 643964858}
   deleteAllButton: {fileID: 222491074}
   diffUpButton: {fileID: 1699643813}
   diffDownButton: {fileID: 1723353717}

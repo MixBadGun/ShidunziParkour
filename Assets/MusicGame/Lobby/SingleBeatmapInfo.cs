@@ -24,7 +24,7 @@ public class SingleBeatmapInfo : MonoBehaviour
     public Image backImage;
     public Image Rating;
     public Image levelImage;
-    public GameObject deleteButton;
+    // public GameObject deleteButton;
     public GameObject deleteAllButton;
 
     public GameObject diffUpButton;
@@ -79,9 +79,9 @@ public class SingleBeatmapInfo : MonoBehaviour
             );
         }
     }
-    void GetReady(string path)
+    void GetReady(AnBeatmapInfo anBeatmapInfo)
     {
-        BeatmapInfo.beatmap_name = path;
+        BeatmapInfo.anBeatmapInfo = anBeatmapInfo;
         LoadMaplist.instance.OpenDisplayPanel();
     }
 
@@ -90,7 +90,7 @@ public class SingleBeatmapInfo : MonoBehaviour
         FileBrowserHelpers.DeleteDirectory($"{dataFolder}/{path}");
         if (reload)
         {
-            SceneManager.LoadScene("MusicLobby");
+            SceneLoader.LoadMusicLobby();
         }
     }
 
@@ -100,7 +100,7 @@ public class SingleBeatmapInfo : MonoBehaviour
         {
             DeleteMap(temp_beatmapInfo.path, false);
         }
-        SceneManager.LoadScene("MusicLobby");
+        SceneLoader.LoadMusicLobby();
     }
 
     public void LoadBeatmapInfo()
@@ -108,9 +108,9 @@ public class SingleBeatmapInfo : MonoBehaviour
         beatmapInfo = beatmapInfos[diff_index];
 
         gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
-        gameObject.GetComponent<Button>().onClick.AddListener(() => GetReady(beatmapInfo.path));
-        deleteButton.GetComponent<Button>().onClick.RemoveAllListeners();
-        deleteButton.GetComponent<Button>().onClick.AddListener(() => DeleteMap(beatmapInfo.path));
+        gameObject.GetComponent<Button>().onClick.AddListener(() => GetReady(beatmapInfo));
+        // deleteButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        // deleteButton.GetComponent<Button>().onClick.AddListener(() => DeleteMap(beatmapInfo.path));
         deleteAllButton.GetComponent<Button>().onClick.RemoveAllListeners();
         deleteAllButton.GetComponent<Button>().onClick.AddListener(() => DeleteMapWithAllLevels());
 
@@ -173,7 +173,7 @@ public class SingleBeatmapInfo : MonoBehaviour
         {
             diffUpButton.SetActive(true);
         }
-        deleteButton.SetActive(LoadMaplist.IsDeleting());
+        // deleteButton.SetActive(LoadMaplist.IsDeleting());
         deleteAllButton.SetActive(LoadMaplist.IsDeleting());
     }
 }

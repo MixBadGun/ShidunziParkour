@@ -15,7 +15,7 @@ public class ResetAll : MonoBehaviour
         // if (NetworkClient.isConnected)
         // {
         Time.timeScale = 1;
-        SceneManager.LoadScene("Running");
+        SceneLoader.LoadRunning();
         // }
         // else
         // {
@@ -40,7 +40,7 @@ public class ResetAll : MonoBehaviour
     public void GameStart()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene("Running");
+        SceneLoader.LoadRunning();
     }
 
     public void GoToShop(){
@@ -52,11 +52,6 @@ public class ResetAll : MonoBehaviour
     }
 
     public void GoToMusic(){
-        GameObject manager = GameObject.Find("MultyScript");
-        if (manager)
-        {
-            Destroy(manager);
-        }
-        SceneManager.LoadScene("MusicLobby");
+        SceneLoader.LoadMusicLobby();
     }
 }

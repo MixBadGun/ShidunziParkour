@@ -31,13 +31,19 @@ public class SkinLoader : MonoBehaviour
 
         bool isCustomSkin = false;
 
-        if (!skip_beatmap_skin){
+        if (!skip_beatmap_skin && BeatmapInfo.musicMode == true){
             if (!DataStorager.settings.notBeatmapSkin)
             {
-                string beatmap_skin_path = $"{Application.persistentDataPath}/music/{BeatmapInfo.beatmap_name}/skin";
+                string beatmap_skin_path = $"{Application.persistentDataPath}/music/{BeatmapInfo.anBeatmapInfo.path}/skin";
+                string sec_beatmap_skin_path = $"{Application.persistentDataPath}/music/{BeatmapInfo.anBeatmapInfo.refer_path}/skin";
                 if (Directory.Exists(beatmap_skin_path))
                 {
                     skin_path = beatmap_skin_path;
+                    isCustomSkin = true;
+                }
+                else if (Directory.Exists(sec_beatmap_skin_path))
+                {
+                    skin_path = sec_beatmap_skin_path;
                     isCustomSkin = true;
                 }
             }
