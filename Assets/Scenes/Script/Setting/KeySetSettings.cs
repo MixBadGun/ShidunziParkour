@@ -172,4 +172,9 @@ public class KeySetSettings : MonoBehaviour
                 }
         }
     }
+
+    public void ResetDefaultKeyMapping()
+    {
+        DataStorager.keysettings = DataStorager.GetDefaultKeySettings();
+    }
 }
