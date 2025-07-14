@@ -897,6 +897,19 @@ public class BeatmapManager : MonoBehaviour
 
     enum Rating { SSSp, SSS, SSp, SS, Sp, S, AAA, AA, A, BBB, BB, B, C, D, F };
 
+    int CalcNearestTrack(int[] tracks, int now_track)
+    {
+        int nearest_track = tracks[0];
+        foreach (int track in tracks)
+        {
+            if (Math.Abs(track - now_track) < Math.Abs(nearest_track - now_track))
+            {
+                nearest_track = track;
+            }
+        }
+        return nearest_track;
+    }
+
     void SyncplayHandle()
     {
         // 需要同步时间点处理的音符
@@ -996,7 +1009,8 @@ public class BeatmapManager : MonoBehaviour
                 }
                 if (OnPlayingTime - BeforeTime >= should_change_time)
                 {
-                    int should_move_times = should_tracks[0] - Player.GetNowTrack();
+                    int nearest_track = CalcNearestTrack(should_tracks, Player.GetNowTrack());
+                    int should_move_times = nearest_track - Player.GetNowTrack();
                     // 移动
                     if (should_move_times > 0)
                     {
