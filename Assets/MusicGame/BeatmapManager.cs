@@ -725,7 +725,7 @@ public class BeatmapManager : MonoBehaviour
         return (a1 < b2) && (a2 < b1);
     }
 
-    int[] toTouchTracks(float track, float size = 1)
+    int[] toTouchTracks(float track, float size = 1, bool contrast = false)
     {
         List<int> move_tracks = new();
         float left_track = 2 * track - size;
@@ -735,6 +735,18 @@ public class BeatmapManager : MonoBehaviour
             if (Intersects(left_track, right_track, k * 2 - 1, k * 2 + 1))
             {
                 move_tracks.Add(k);
+            }
+        }
+        if (contrast)
+        {
+            List<int> old_tracks = new(move_tracks);
+            move_tracks.Clear();
+            for (int k = 1; k <= 3; k++)
+            {
+                if (!old_tracks.Contains(k))
+                {
+                    move_tracks.Add(k);
+                }
             }
         }
         return move_tracks.ToArray();
@@ -992,63 +1004,12 @@ public class BeatmapManager : MonoBehaviour
         // 自动游玩判断
         if (isAutoPlay)
         {
-            if (!detect_list.Contains(auto_remain_beats[0].type))
-            {
-                return;
-            }
-            // 先判断是不是需要大跳
-            if ((auto_remain_beats[0].stack > 1 || auto_remain_beats[0].y_offset > 1) && Player.GetPos().y < 0.01f)
-            {
-                float jump_should_remain_time = (float)Math.Sqrt(Math.Pow(2, (int)Math.Log(auto_remain_beats[0].stack * auto_remain_beats[0].size + auto_remain_beats[0].y_offset, 2) + 1) * 2 / Player.GetGravity());
-                if (Player.GetPos().z / Player.GetComponent<Player>().GetVelocity() + jump_should_remain_time - autoShift > auto_remain_beats[0].beat_time + iniOffset)
-                {
-                    int jump_times = (int)Math.Log(auto_remain_beats[0].stack * auto_remain_beats[0].size + auto_remain_beats[0].y_offset, 2);
-                    for (int k = 0; k < jump_times; k++)
-                    {
-                        Player.moveUp(KeyCode.UpArrow);
-                    }
-                }
-            }
-            int[] should_tracks = toTouchTracks(auto_remain_beats[0].track, auto_remain_beats[0].size);
-            if (!should_tracks.Contains(Player.GetNowTrack()) && (should_tracks.Count() > 0))
-            {
-                if (!last_record)
-                {
-                    last_change_time = OnPlayingTime - BeforeTime;
-                    last_record = true;
-                    float switch_time = (auto_remain_beats[0].beat_time - last_change_time) * 1 / 2;
-                    if (switch_time < 0.25)
-                    {
-                        switch_time = 0;
-                    }
-                    should_change_time = last_change_time + switch_time;
-                }
-                if (OnPlayingTime - BeforeTime >= should_change_time)
-                {
-                    int nearest_track = CalcNearestTrack(should_tracks, Player.GetNowTrack());
-                    int should_move_times = nearest_track - Player.GetNowTrack();
-                    // 移动
-                    if (should_move_times > 0)
-                    {
-                        for (int j = 0; j < should_move_times; j++)
-                        {
-                            Player.moveRight(KeyCode.RightArrow);
-                        }
-                    }
-                    else
-                    {
-                        for (int j = 0; j < -should_move_times; j++)
-                        {
-                            Player.moveLeft(KeyCode.LeftArrow);
-                        }
-                    }
-                }
-            }
+            AutoControl();
         }
         while (Player.GetPos().z >= (auto_remain_beats[0].beat_time + iniOffset - autoShift) * Player.GetVelocity()
             && detect_list.Contains(auto_remain_beats[0].type))
         {
-            int[] should_tracks = toTouchTracks(auto_remain_beats[0].track, auto_remain_beats[0].size);
+            int[] should_tracks = toTouchTracks(auto_remain_beats[0].track, auto_remain_beats[0].size, auto_remain_beats[0].isDodge);
 
             // 补足 Auto 的痛（
             if (!should_tracks.Contains(Player.GetNowTrack()) && (should_tracks.Count() > 0) && isAutoPlay)
@@ -1071,15 +1032,24 @@ public class BeatmapManager : MonoBehaviour
                 }
             }
 
-            if (((auto_remain_beats[0].stack > 1 && Player.GetPos().y > 0.1) || (Player.GetPos().y > 1 + auto_remain_beats[0].y_offset)) && isAutoPlay)
-            {
-                Player.moveDown(KeyCode.DownArrow);
-            }
-
             // 设置跨越速度
             if (detect_list.Contains(auto_remain_beats[1].type))
             {
                 Player.setCrossTime(auto_remain_beats[1].beat_time - auto_remain_beats[0].beat_time);
+            }
+
+            // 躲避的话，直接在这里砍断逻辑判断
+            if (auto_remain_beats[0].isDodge && isAutoPlay)
+            {
+                if (Player.GetPos().z - (auto_remain_beats[0].beat_time + iniOffset - autoShift) * Player.GetVelocity() <= 0.25 * (Player.GetVelocity() / 50))
+                {
+                    return;
+                }
+            }
+
+            if (((auto_remain_beats[0].stack > 1 && Player.GetPos().y > 0.1) || (Player.GetPos().y > 1 + auto_remain_beats[0].y_offset)) && isAutoPlay)
+            {
+                Player.moveDown(KeyCode.DownArrow);
             }
 
             auto_remain_beats.RemoveAt(0);
@@ -1112,6 +1082,133 @@ public class BeatmapManager : MonoBehaviour
                 }
                 AddPlayRecord(MoveType.MOVE_INDEX, play_records[0].keyCode);
                 play_records.RemoveAt(0);
+            }
+        }
+    }
+
+    void JumpJudge()
+    {
+        float jump_should_remain_time = (float)Math.Sqrt(Math.Pow(2, (int)Math.Log(auto_remain_beats[0].stack * auto_remain_beats[0].size + auto_remain_beats[0].y_offset, 2) + 1) * 2 / Player.GetGravity());
+        if (Player.GetPos().z / Player.GetComponent<Player>().GetVelocity() + jump_should_remain_time - autoShift > auto_remain_beats[0].beat_time + iniOffset)
+        {
+            int jump_times = (int)Math.Log(auto_remain_beats[0].stack * auto_remain_beats[0].size + auto_remain_beats[0].y_offset, 2);
+            if (jump_times == 0)
+            {
+                jump_times++;
+            }
+            for (int k = 0; k < jump_times; k++)
+            {
+                Player.moveUp(KeyCode.UpArrow);
+            }
+        }
+    }
+
+    void NormalJumpJudge()
+    {
+        if ((auto_remain_beats[0].stack > 1 || auto_remain_beats[0].y_offset > 1) && Player.GetPos().y < 0.01f)
+        {
+            JumpJudge();
+        }
+    }
+
+    bool JudgeTranstoNextTrack(int judge_track,int next_index = 1)
+    {
+        if (auto_remain_beats.Count() < 2)
+        {
+            return true;
+        }
+        if (auto_remain_beats[next_index].beat_time - auto_remain_beats[0].beat_time > 0.25 / 50)
+        {
+            return true;
+        }
+        if (!toTouchTracks(auto_remain_beats[next_index].track, auto_remain_beats[next_index].size).Contains(judge_track))
+        {
+            return JudgeTranstoNextTrack(judge_track, next_index + 1);
+        }
+        if (auto_remain_beats[next_index].y_offset < 1)
+        {
+            return false;
+        } else
+        {
+            return true;
+        }
+    }
+
+    void DogdeJumpJudge()
+    {
+        if (Player.GetPos().y > 0.01f)
+        {
+            return;
+        }
+        int[] should_tracks = toTouchTracks(auto_remain_beats[0].track, auto_remain_beats[0].size, auto_remain_beats[0].isDodge);
+        int nearest_track = CalcNearestTrack(should_tracks, Player.GetNowTrack());
+        Debug.Log(JudgeTranstoNextTrack(nearest_track));
+        if (!JudgeTranstoNextTrack(nearest_track))
+        {
+            JumpJudge();
+        }
+        if (should_tracks.Count() <= 0)
+        {
+            if (auto_remain_beats[0].y_offset > 1)
+            {
+                return;
+            }
+            else
+            {
+                JumpJudge();
+            }
+        }
+    }
+
+    void AutoControl()
+    {
+        if (!detect_list.Contains(auto_remain_beats[0].type))
+        {
+            return;
+        }
+        // 先判断是不是需要大跳
+        if (auto_remain_beats[0].isDodge)
+        {
+            // 躲避跳跃判断
+            DogdeJumpJudge();
+        }
+        else
+        {
+            NormalJumpJudge();
+        }
+        int[] should_tracks = toTouchTracks(auto_remain_beats[0].track, auto_remain_beats[0].size, auto_remain_beats[0].isDodge);
+        if (!should_tracks.Contains(Player.GetNowTrack()) && (should_tracks.Count() > 0))
+        {
+            if (!last_record)
+            {
+                last_change_time = OnPlayingTime - BeforeTime;
+                last_record = true;
+                float switch_time = (auto_remain_beats[0].beat_time - last_change_time) * 1 / 2;
+                if (switch_time < 0.25)
+                {
+                    switch_time = 0;
+                }
+                should_change_time = last_change_time + switch_time;
+            }
+            if (OnPlayingTime - BeforeTime >= should_change_time)
+            {
+                int nearest_track = CalcNearestTrack(should_tracks, Player.GetNowTrack());
+                int should_move_times = nearest_track - Player.GetNowTrack();
+                // 移动
+                if (should_move_times > 0)
+                {
+                    for (int j = 0; j < should_move_times; j++)
+                    {
+                        Player.moveRight(KeyCode.RightArrow);
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < -should_move_times; j++)
+                    {
+                        Player.moveLeft(KeyCode.LeftArrow);
+                    }
+                }
             }
         }
     }
