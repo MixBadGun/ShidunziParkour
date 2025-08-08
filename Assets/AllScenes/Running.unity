@@ -7723,6 +7723,7 @@ MonoBehaviour:
   - {fileID: 2800000, guid: a48b22820b5cd444f903b46433b818be, type: 3}
   side_edge_texture: {fileID: 2800000, guid: b49631a710dbed94f8c01ccb139616bf, type: 3}
   side_floor_texture: {fileID: 2800000, guid: e6f27ccbf2d314f4b9b6f6ee3cda79dd, type: 3}
+  fence_texture: {fileID: 2800000, guid: 7694daa2c00442e47b3850f18d9e4ae8, type: 3}
 --- !u!4 &1427754120
 Transform:
   m_ObjectHideFlags: 0

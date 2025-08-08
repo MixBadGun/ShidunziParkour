@@ -14,6 +14,7 @@ public class SkinLoader : MonoBehaviour
     public Texture2D[] bandeng_texture;
     public Texture2D side_edge_texture;
     public Texture2D side_floor_texture;
+    public Texture2D fence_texture;
 
     string dataFolder;
 
@@ -119,9 +120,15 @@ public class SkinLoader : MonoBehaviour
             byte[] fileData = File.ReadAllBytes($"{skin_path}/side_floor.png");
             side_floor_texture.LoadImage(fileData);
         }
+        
+        if(File.Exists($"{skin_path}/fence.png")){
+            byte[] fileData = File.ReadAllBytes($"{skin_path}/fence.png");
+            fence_texture.LoadImage(fileData);
+        }
 
-        if(File.Exists($"{skin_path}/crash.wav")){
-            StartCoroutine(LoadBoomSound($"file://{skin_path}/crash.wav",AudioType.WAV));
+        if (File.Exists($"{skin_path}/crash.wav"))
+        {
+            StartCoroutine(LoadBoomSound($"file://{skin_path}/crash.wav", AudioType.WAV));
         }
 
         if(File.Exists($"{skin_path}/golden.wav")){

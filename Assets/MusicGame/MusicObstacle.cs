@@ -12,18 +12,16 @@ public class MusicObstacle : MonoBehaviour
     private bool isInit = true;
     private bool isShow = false;
     private bool isLast = false;
+    // 躲避属性
+    private bool isDodge = false;
     public bool isBest = false;
     bool forcePerfect = false;
     public int[] track;
     public GameObject player;
     public GameObject camera;
-    public GameObject perfectboom;
-    public GameObject greatboom;
-    public GameObject showboom;
     public AudioSource bestSound;
     public GameObject boomSounds;
     public BeatmapManager beatmapManager;
-    // Start is called before the first frame update
     void Start()
     {
         if(DataStorager.settings.cinemaMod || track.Count() <= 0 || isShow){
@@ -81,6 +79,12 @@ public class MusicObstacle : MonoBehaviour
         isLast = true;
     }
 
+    public void setDodgeNote()
+    {
+        isDodge = true;
+        Instantiate(GlobalResources.fenceTemplate, transform).transform.localPosition = Vector3.zero;
+    }
+
     void triggerEnd() {
         beatmapManager.triggerEnd();
     }
@@ -98,13 +102,96 @@ public class MusicObstacle : MonoBehaviour
         return false;
     }
 
-    // Update is called once per frame
+    // 严格的判定是否在轨道上，仅判定当前轨道
+    bool isOnTrackCritical() {
+        if(track.Contains(player.GetComponent<Player>().GetNowTrack())){
+            return true;
+        }
+        return false;
+    }
+
     void FixedUpdate()
     {
-        if(Math.Abs(player.transform.position.z - gameObject.transform.position.z) < 2 * (player.GetComponent<Player>().GetVelocity() / 50)
+        if (isDodge)
+        {
+            DodgeUpdate();
+        }
+        else
+        {
+            NormalUpdate();
+        }
+    }
+
+    private bool dodgeHandled = false; // 避免多次处理躲避音符
+
+    /// 躲避墩子的判定逻辑
+    void DodgeUpdate() {
+
+        if (player.transform.position.z - gameObject.transform.position.z >= 10)
+        {
+            Destroy(gameObject);
+        }
+
+        if (dodgeHandled)
+        {
+            return;
+        }
+
+        // 仅判定 Late，判定间隔非常短，特别松
+        if (player.transform.position.z >= gameObject.transform.position.z)
+        {
+            if (player.transform.position.z - gameObject.transform.position.z <= 0.25 * (player.GetComponent<Player>().GetVelocity() / 50))
+            {
+                if (isOnTrackCritical()
+                    && Math.Abs(player.transform.position.y - gameObject.transform.position.y) < 1)
+                {
+                    if (!isShow)
+                    {
+                        GenerateBoom(GlobalResources.missboom);
+                    }
+                    else
+                    {
+                        GenerateBoom(GlobalResources.showboom);
+                    }
+                    beatmapManager.AddNowPoint(BeatmapManager.M_TYPE.Miss, !isShow);
+                    if (isBest)
+                    {
+                        beatmapManager.AddNowBest(BeatmapManager.M_TYPE.Break_M, !isShow);
+                    }
+                    beatmapManager.Miss();
+                    if (isLast)
+                    {
+                        triggerEnd();
+                    }
+                    Destroy(gameObject);
+                }
+            }
+            else
+            {
+                // 没撞到那就是 Perfect
+                dodgeHandled = true;
+                beatmapManager.AddNowPoint(BeatmapManager.M_TYPE.Perfect, !isShow);
+                if (isBest)
+                {
+                    beatmapManager.AddNowBest(BeatmapManager.M_TYPE.Break_P, !isShow);
+                }
+                if (isLast)
+                {
+                    triggerEnd();
+                }
+            }
+        }
+    }
+
+    /// 非躲避墩子的判定逻辑
+    void NormalUpdate()
+    {
+        
+        if (Math.Abs(player.transform.position.z - gameObject.transform.position.z) < 2 * (player.GetComponent<Player>().GetVelocity() / 50)
           && isOnTrack()
           && Math.Abs(player.transform.position.y - gameObject.transform.position.y) < 2
-        ){
+        )
+        {
             isTouched = true;
         }
         // 下落墩子也可以
@@ -122,11 +209,11 @@ public class MusicObstacle : MonoBehaviour
                 // Perfect
                 if (!isShow)
                 {
-                    GenerateBoom(perfectboom);
+                    GenerateBoom(GlobalResources.perfectboom);
                 }
                 else
                 {
-                    GenerateBoom(showboom);
+                    GenerateBoom(GlobalResources.showboom);
                 }
 
                 beatmapManager.AddNowPoint(BeatmapManager.M_TYPE.Perfect,!isShow);
@@ -143,11 +230,11 @@ public class MusicObstacle : MonoBehaviour
                 {
                     if (!isShow)
                     {
-                        GenerateBoom(greatboom);
+                        GenerateBoom(GlobalResources.greatboom);
                     }
                     else
                     {
-                        GenerateBoom(showboom);
+                        GenerateBoom(GlobalResources.showboom);
                     }
 
                     beatmapManager.AddNowPoint(BeatmapManager.M_TYPE.Great,!isShow);

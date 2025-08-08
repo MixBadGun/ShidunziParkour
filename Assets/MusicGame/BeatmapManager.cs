@@ -190,6 +190,7 @@ public class BeatmapManager : MonoBehaviour
         public float size;
         public float y_offset;
         public float BPM;
+        public bool isDodge;
         public CameraData camera_data;
     }
 
@@ -225,6 +226,16 @@ public class BeatmapManager : MonoBehaviour
             return getValue(values[index], default_value);
         }
         return default_value;
+    }
+
+    // 从数组中试图比较相应数的两个数值是否【不同】，如果不同则返回 true，否则为 false
+    bool IsDifferValueWithTry(string[] values, int index, float default_value = 0)
+    {
+        if (values.Count() > index)
+        {
+            return getValue(values[index], default_value) != default_value;
+        }
+        return false;
     }
 
     public static Difficulty GetDifficulty(string difficulty_string)
@@ -447,7 +458,8 @@ public class BeatmapManager : MonoBehaviour
                         stack = stack_count,
                         rem_stack = rem_stack,
                         size = size,
-                        y_offset = y_offset
+                        y_offset = y_offset,
+                        isDodge = IsDifferValueWithTry(data, 9, 0)
                     }
                 );
 
@@ -783,6 +795,10 @@ public class BeatmapManager : MonoBehaviour
                         }
                 }
                 ;
+                if (remain_beats[0].isDodge)
+                {
+                    obs.GetComponent<MusicObstacle>().setDodgeNote();
+                }
                 obs.GetComponent<MusicObstacle>().index = placed_count++;
                 obs.GetComponent<MusicObstacle>().size = remain_beats[0].size;
                 obs.GetComponent<MusicObstacle>().setNote();
