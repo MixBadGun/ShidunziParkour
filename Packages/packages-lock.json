@@ -7,6 +7,13 @@
       "dependencies": {},
       "url": "https://packages.unity.cn"
     },
+    "com.rlabrecque.steamworks.net": {
+      "version": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "55a9fc8eb4df4dd4cfc11b23003a5ea987317cae"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
@@ -14,7 +21,7 @@
       "dependencies": {}
     },
     "com.unity.burst": {
-      "version": "1.8.19",
+      "version": "1.8.18",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -85,10 +92,10 @@
       "depth": 0,
       "source": "builtin",
       "dependencies": {
-        "com.unity.probuilder": "5.2.4",
+        "com.unity.probuilder": "5.2.3",
         "com.unity.polybrush": "1.1.8",
         "com.unity.formats.fbx": "4.2.1",
-        "com.unity.terrain-tools": "5.0.6"
+        "com.unity.terrain-tools": "5.0.5"
       }
     },
     "com.unity.formats.fbx": {
@@ -170,7 +177,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.probuilder": {
-      "version": "5.2.4",
+      "version": "5.2.3",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -188,7 +195,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.render-pipelines.core": {
-      "version": "14.0.12",
+      "version": "14.0.11",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
@@ -205,8 +212,8 @@
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
         "com.unity.burst": "1.8.9",
-        "com.unity.render-pipelines.core": "14.0.12",
-        "com.unity.shadergraph": "14.0.12",
+        "com.unity.render-pipelines.core": "14.0.11",
+        "com.unity.shadergraph": "14.0.11",
         "com.unity.render-pipelines.universal-config": "14.0.9"
       }
     },
@@ -250,11 +257,11 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.shadergraph": {
-      "version": "14.0.12",
+      "version": "14.0.11",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.render-pipelines.core": "14.0.12",
+        "com.unity.render-pipelines.core": "14.0.11",
         "com.unity.searcher": "4.9.2"
       }
     },
@@ -275,7 +282,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.terrain-tools": {
-      "version": "5.0.6",
+      "version": "5.0.5",
       "depth": 1,
       "source": "registry",
       "dependencies": {

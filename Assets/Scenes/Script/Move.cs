@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Unity.Entities.UniversalDelegates;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -46,8 +48,8 @@ public class Move : MonoBehaviour
     private int life = 1;
     private float offsetMiles = 0;
     private List<FromTo> movementList = new();
-    
-	private float maxReachedSpeed = 0; // 最大速度显示
+
+    private float maxReachedSpeed = 0; // 最大速度显示
 
     private float move_timer = 0f; // 计时器
 
@@ -86,35 +88,45 @@ public class Move : MonoBehaviour
         }
         // addBuff("invincible",100000);
         // SpeedUp(10);
+        StartCoroutine(UploadLocalStatsCoroutine());
     }
 
-    public int GetLife(){
+    public int GetLife()
+    {
         return life;
     }
 
-    public Vector3 GetVelocity(){
+    public Vector3 GetVelocity()
+    {
         return velocity;
     }
 
-    	
-	public float GetDisplaySpeed(){
-		maxReachedSpeed = Math.Max(GetVelocity().z,maxReachedSpeed);
-		return maxReachedSpeed;
-	}
 
-    public void AddOffsetMiles(float miles){
+    public float GetDisplaySpeed()
+    {
+        maxReachedSpeed = Math.Max(GetVelocity().z, maxReachedSpeed);
+        return maxReachedSpeed;
+    }
+
+    public void AddOffsetMiles(float miles)
+    {
         offsetMiles += miles;
     }
 
-    public float GetMiles(){
+    public float GetMiles()
+    {
         return gameObject.transform.position.z + offsetMiles;
     }
 
-    public bool ConsumeLife(int count = 1){
-        if(count >= life){
+    public bool ConsumeLife(int count = 1)
+    {
+        if (count >= life)
+        {
             life = 0;
             return false;
-        } else {
+        }
+        else
+        {
             hurtUI.SetTrigger("TriggerHurt");
             hurt.Play();
             life -= count;
@@ -225,14 +237,16 @@ public class Move : MonoBehaviour
         }
     }
 
-    enum TouchDirection {
+    enum TouchDirection
+    {
         UP,
         RIGHT,
         DOWN,
         LEFT
     }
 
-    TouchDirection CalcDirectionByPos(Vector2 pos) {
+    TouchDirection CalcDirectionByPos(Vector2 pos)
+    {
         Vector2 a = new(0, 0);
         Vector2 b = new(Screen.width, 0);
         Vector2 c = new(Screen.width, Screen.height);
@@ -260,7 +274,8 @@ public class Move : MonoBehaviour
         return a.x * b.y - a.y * b.x;
     }
 
-    bool WithInPreventBox(Vector2 pos) {
+    bool WithInPreventBox(Vector2 pos)
+    {
         RectTransform rectTrans = PreventTouchBox.GetComponent<RectTransform>();
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             rectTrans,
@@ -342,30 +357,38 @@ public class Move : MonoBehaviour
     void handleKeyInput()
     {
         KeyCode[] leftKeys = DataStorager.keysettings.left;
-        foreach( KeyCode key in leftKeys ){
-            if(Input.GetKeyDown(key)){
-                 moveLeft();
+        foreach (KeyCode key in leftKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                moveLeft();
             }
         }
 
         KeyCode[] rightKeys = DataStorager.keysettings.right;
-        foreach( KeyCode key in rightKeys ){
-            if(Input.GetKeyDown(key)){
-                 moveRight();
+        foreach (KeyCode key in rightKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                moveRight();
             }
         }
 
         KeyCode[] upKeys = DataStorager.keysettings.up;
-        foreach( KeyCode key in upKeys ){
-            if(Input.GetKeyDown(key)){
-                 moveUp();
+        foreach (KeyCode key in upKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                moveUp();
             }
         }
 
         KeyCode[] downKeys = DataStorager.keysettings.down;
-        foreach( KeyCode key in downKeys ){
-            if(Input.GetKeyDown(key)){
-                 moveDown();
+        foreach (KeyCode key in downKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                moveDown();
             }
         }
     }
@@ -416,7 +439,8 @@ public class Move : MonoBehaviour
         return (float)(delta_pos * (1 - Math.Pow(1 - t / CROSS_TIME, 4)));
     }
 
-    void GenerateBoom(){
+    void GenerateBoom()
+    {
         var camera = GlobalTargetManager.camera;
         camera.GetComponent<FixedCamera>().triggerShake();
         var boom = GlobalTargetManager.boom;
@@ -503,15 +527,16 @@ public class Move : MonoBehaviour
     void moveDown()
     {
         // the_rigidbody.AddForce(Vector3.down * 50f, ForceMode.Impulse);
-        velocity -= new Vector3(0,(float)(gameObject.transform.position.y / 0.12),0);
+        velocity -= new Vector3(0, (float)(gameObject.transform.position.y / 0.12), 0);
         animator.SetTrigger("Flating");
     }
-    float CalcDistance(Vector3 pos1,Vector3 pos2,Vector3 pos3){
+    float CalcDistance(Vector3 pos1, Vector3 pos2, Vector3 pos3)
+    {
         float a = (pos2 - pos3).magnitude;
         float b = (pos1 - pos3).magnitude;
         float c = (pos1 - pos2).magnitude;
-        float p = ( a + b + c ) / 2;
-        float area = (float)Math.Sqrt(p*(p-a)*(p-b)*(p-c));
+        float p = (a + b + c) / 2;
+        float area = (float)Math.Sqrt(p * (p - a) * (p - b) * (p - c));
         // Debug.Log(area * 2 / c);
         return area * 2 / c;
     }
@@ -526,40 +551,55 @@ public class Move : MonoBehaviour
             velocity = Vector3.zero;
             isFlying = false;
         }
-        if(isFlying){
+        if (isFlying)
+        {
             velocity = new Vector3(velocity.x, velocity.y - Gravity * Time.deltaTime, velocity.z);
         }
         velocity = new Vector3(velocity.x, velocity.y, MOVE_SPEED * speedTimes * (1 + all_timer / 100));
         // 到达一定速度后，第二种检测碰撞模式
-        if(velocity.z > 150){
+        if (velocity.z > 150)
+        {
             Vector3 newPos = gameObject.transform.position + velocity * Time.deltaTime;
             var lists = GameObject.FindGameObjectsWithTag("Obstacle");
-            for(int i = 0;i < lists.Length; i++){
-                if(gameObject.transform.position.z < lists[i].transform.position.z && lists[i].transform.position.z < newPos.z){
-                    if(CalcDistance(gameObject.transform.position,newPos,lists[i].transform.position) < 1.615){
+            for (int i = 0; i < lists.Length; i++)
+            {
+                if (gameObject.transform.position.z < lists[i].transform.position.z && lists[i].transform.position.z < newPos.z)
+                {
+                    if (CalcDistance(gameObject.transform.position, newPos, lists[i].transform.position) < 1.615)
+                    {
                         lists[i].GetComponent<OnHit>().HandleTrigger(gameObject.GetComponent<Collider>());
                     }
                 }
             }
             lists = GameObject.FindGameObjectsWithTag("Item");
-            for(int i = 0;i < lists.Length; i++){
-                if(gameObject.transform.position.z < lists[i].transform.position.z && lists[i].transform.position.z < newPos.z){
-                    if(CalcDistance(gameObject.transform.position,newPos,lists[i].transform.position) < 1.615){
+            for (int i = 0; i < lists.Length; i++)
+            {
+                if (gameObject.transform.position.z < lists[i].transform.position.z && lists[i].transform.position.z < newPos.z)
+                {
+                    if (CalcDistance(gameObject.transform.position, newPos, lists[i].transform.position) < 1.615)
+                    {
                         var obst = lists[i].GetComponent<CrashingDunzi>();
-                        if(obst){
+                        if (obst)
+                        {
                             obst.HandleTrigger(gameObject.GetComponent<Collider>());
-                        };
+                        }
+                        ;
                         var obst_2 = lists[i].GetComponent<Invincible>();
-                        if(obst_2){
+                        if (obst_2)
+                        {
                             obst_2.HandleTrigger(gameObject.GetComponent<Collider>());
-                        };
+                        }
+                        ;
                     }
                 }
             }
             lists = GameObject.FindGameObjectsWithTag("Coin");
-            for(int i = 0;i < lists.Length; i++){
-                if(gameObject.transform.position.z < lists[i].transform.position.z && lists[i].transform.position.z < newPos.z){
-                    if(CalcDistance(gameObject.transform.position,newPos,lists[i].transform.position) < 0.825){
+            for (int i = 0; i < lists.Length; i++)
+            {
+                if (gameObject.transform.position.z < lists[i].transform.position.z && lists[i].transform.position.z < newPos.z)
+                {
+                    if (CalcDistance(gameObject.transform.position, newPos, lists[i].transform.position) < 0.825)
+                    {
                         lists[i].GetComponent<Coin>().HandleTrigger(gameObject.GetComponent<Collider>());
                     }
                 }
@@ -567,11 +607,24 @@ public class Move : MonoBehaviour
         }
         // 位移
         gameObject.transform.position += velocity * Time.deltaTime;
-        gameObject.transform.rotation = Quaternion.Euler(all_timer * velocity.z * 32,0,0);
+        gameObject.transform.rotation = Quaternion.Euler(all_timer * velocity.z * 32, 0, 0);
     }
 
     // 特殊效果
-    public void SpeedUp(float times){
+    public void SpeedUp(float times)
+    {
         speedTimes += times;
+    }
+
+    // Steam 统计数据
+    float last_update_mile = 0;
+    IEnumerator UploadLocalStatsCoroutine()
+    {
+        while (true)
+        {
+            SteamStatsAndAchievements.AppendLocalStats("stat_mile", (int)(GetMiles() - last_update_mile));
+            last_update_mile = GetMiles();
+            yield return new WaitForSeconds(2f);
+        }
     }
 }

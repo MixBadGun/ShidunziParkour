@@ -923,7 +923,7 @@ public class BeatmapManager : MonoBehaviour
         public List<Play_Record> play_records;
     }
 
-    enum Rating { SSSp, SSS, SSp, SS, Sp, S, AAA, AA, A, BBB, BB, B, C, D, F };
+    public enum Rating { SSSp, SSS, SSp, SS, Sp, S, AAA, AA, A, BBB, BB, B, C, D, F };
 
     int CalcNearestTrack(int[] tracks, int now_track)
     {
@@ -1241,6 +1241,33 @@ public class BeatmapManager : MonoBehaviour
 
         var jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
         File.WriteAllText(save_target, jsonData);
+
+        UploadRatingStats();
+    }
+
+
+    // Steam 统计数据
+    void UploadRatingStats()
+    {
+        switch (GetRawRating())
+        {
+            case Rating.SSSp:
+                {
+                    SteamStatsAndAchievements.AppendLocalStats("stat_sss_plus_times", 1);
+                    break;
+                }
+            case Rating.SSS:
+                {
+                    SteamStatsAndAchievements.AppendLocalStats("stat_sss_times", 1);
+                    break;
+                }
+            case Rating.F:
+                {
+                    SteamStatsAndAchievements.UnlockAchievement(SteamStatsAndAchievements.Achievement.MUSIC_ACHIEVEMENT_NULL);
+                    break;
+                }
+        }
+        SteamStatsAndAchievements.AppendLocalStats("stat_clear_times", 1);
     }
 
     public float GetProgress()
@@ -1366,76 +1393,81 @@ public class BeatmapManager : MonoBehaviour
         return FullCombo;
     }
 
-    int CalcRating(float progress)
+    Rating CalcRating(float progress)
     {
         if (progress <= 0)
         {
-            return (int)Rating.F;
+            return Rating.F;
         }
         else if (progress < 0.5)
         {
-            return (int)Rating.D;
+            return Rating.D;
         }
         else if (progress < 0.6)
         {
-            return (int)Rating.C;
+            return Rating.C;
         }
         else if (progress < 0.7)
         {
-            return (int)Rating.B;
+            return Rating.B;
         }
         else if (progress < 0.75)
         {
-            return (int)Rating.BB;
+            return Rating.BB;
         }
         else if (progress < 0.8)
         {
-            return (int)Rating.BBB;
+            return Rating.BBB;
         }
         else if (progress < 0.9)
         {
-            return (int)Rating.A;
+            return Rating.A;
         }
         else if (progress < 0.94)
         {
-            return (int)Rating.AA;
+            return Rating.AA;
         }
         else if (progress < 0.97)
         {
-            return (int)Rating.AAA;
+            return Rating.AAA;
         }
         else if (progress < 0.98)
         {
-            return (int)Rating.S;
+            return Rating.S;
         }
         else if (progress < 0.99)
         {
-            return (int)Rating.Sp;
+            return Rating.Sp;
         }
         else if (progress < 0.995)
         {
-            return (int)Rating.SS;
+            return Rating.SS;
         }
         else if (progress < 1)
         {
-            return (int)Rating.SSp;
+            return Rating.SSp;
         }
         else if (progress < 1.005)
         {
-            return (int)Rating.SSS;
+            return Rating.SSS;
         }
         else
         {
-            return (int)Rating.SSSp;
+            return Rating.SSSp;
         }
     }
 
-    public int GetRating()
+    public Rating GetRawRating()
     {
         return CalcRating(GetProgress());
     }
 
+    public int GetRating()
+    {
+        return (int)CalcRating(GetProgress());
+    }
+
     public int GetNegaRating() {
-        return CalcRating(GetNegaProgress());
+        return (int)CalcRating(GetNegaProgress());
     }
 }
