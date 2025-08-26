@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using SimpleFileBrowser;
+using Steamworks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -79,8 +81,9 @@ public class SingleBeatmapInfo : MonoBehaviour
             );
         }
     }
-    void GetReady(AnBeatmapInfo anBeatmapInfo)
+    void GetReady(AnBeatmapInfo anBeatmapInfo, List<AnBeatmapInfo> anBeatmapInfos)
     {
+        BeatmapInfo.LoadBeatmapInfos = anBeatmapInfos;
         BeatmapInfo.anBeatmapInfo = anBeatmapInfo;
         LoadMaplist.instance.OpenDisplayPanel();
     }
@@ -100,6 +103,18 @@ public class SingleBeatmapInfo : MonoBehaviour
         {
             DeleteMap(temp_beatmapInfo.path, false);
         }
+        if (beatmapInfos[0].steamwork_identity != 0)
+        {
+            SteamMyUGC.UnsubscribeItem(beatmapInfos[0].steamwork_identity);
+            StartCoroutine(DelayMusicLobby(1f));
+            return;
+        }
+        SceneLoader.LoadMusicLobby();
+    }
+
+    IEnumerator DelayMusicLobby(float delay)
+    {
+        yield return new WaitForSeconds(delay);
         SceneLoader.LoadMusicLobby();
     }
 
@@ -108,7 +123,7 @@ public class SingleBeatmapInfo : MonoBehaviour
         beatmapInfo = beatmapInfos[diff_index];
 
         gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
-        gameObject.GetComponent<Button>().onClick.AddListener(() => GetReady(beatmapInfo));
+        gameObject.GetComponent<Button>().onClick.AddListener(() => GetReady(beatmapInfo, beatmapInfos));
         // deleteButton.GetComponent<Button>().onClick.RemoveAllListeners();
         // deleteButton.GetComponent<Button>().onClick.AddListener(() => DeleteMap(beatmapInfo.path));
         deleteAllButton.GetComponent<Button>().onClick.RemoveAllListeners();

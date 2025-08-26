@@ -17,6 +17,12 @@ public class DisplayPanel : MonoBehaviour
     public Sprite[] LevelPresents;
     public GameObject AdbarList;
     public GameObject AdbarTemplate;
+    [SerializeField]
+    private SteamUploadPanel steamUploadPanel;
+    [SerializeField]
+    private Button UploadButton;
+    [SerializeField]
+    private GameObject UGCLink;
 
     public void LoadPanel()
     {
@@ -121,6 +127,17 @@ public class DisplayPanel : MonoBehaviour
         {
             AdbarList.SetActive(false);
         }
+
+        if (BeatmapInfo.anBeatmapInfo.steamwork_identity != 0)
+        {
+            UploadButton.gameObject.SetActive(false);
+            UGCLink.SetActive(true);
+        }
+        else
+        {
+            UploadButton.gameObject.SetActive(true);
+            UGCLink.SetActive(false);
+        }
     }
 
     struct AdInfo
@@ -128,5 +145,16 @@ public class DisplayPanel : MonoBehaviour
         public string imagePath;
         public string additionalText;
         public string targetURL;
+    }
+
+    public void OpenUploadPanel()
+    {
+        steamUploadPanel.gameObject.SetActive(true);
+        steamUploadPanel.LoadUploadPanel();
+    }
+
+    public void OpenSteamworksURL()
+    {
+        Application.OpenURL($"https://steamcommunity.com/workshop/filedetails/?id={BeatmapInfo.anBeatmapInfo.steamwork_identity}");
     }
 }

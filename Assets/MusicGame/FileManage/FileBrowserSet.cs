@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -138,13 +139,14 @@ public class FileBrowserSet : MonoBehaviour
 		LoadFiles(filePaths);
 		SceneLoader.LoadMusicLobby();
 	}
-	
-	public static void LoadFiles( string[] filePaths )
+
+	public static void LoadFiles(string[] filePaths)
 	{
 		string dataFolder = $"{Application.persistentDataPath}/music";
-		if(!Directory.Exists(dataFolder)){
-            Directory.CreateDirectory(dataFolder);
-        }
+		if (!Directory.Exists(dataFolder))
+		{
+			Directory.CreateDirectory(dataFolder);
+		}
 
 		for (int i = 0; i < filePaths.Length; i++)
 		{
@@ -154,6 +156,46 @@ public class FileBrowserSet : MonoBehaviour
 				case "sdx": LoadSingleMap(file_dir); break;
 				case "sdp": LoadMapPacks(file_dir); break;
 			}
+		}
+	}
+
+	public static string PackFiles(string[] beatmapPathNames, string outputPathName)
+	{
+		string dataFolder = $"{Application.persistentDataPath}/music";
+		string tempPath = $"{dataFolder}/takepacktemp";
+		if (Directory.Exists(tempPath))
+		{
+			FileBrowserHelpers.DeleteDirectory(tempPath);
+		}
+		Directory.CreateDirectory(tempPath);
+		string tempPath_2 = $"{dataFolder}/outpacktemp";
+		if (Directory.Exists(tempPath_2))
+		{
+			FileBrowserHelpers.DeleteDirectory(tempPath_2);
+		}
+		Directory.CreateDirectory(tempPath_2);
+		foreach (string beatmapPathName in beatmapPathNames)
+		{
+			if (!Directory.Exists($"{dataFolder}/{beatmapPathName}"))
+			{
+				continue;
+			}
+			ZipFile.CreateFromDirectory($"{dataFolder}/{beatmapPathName}", $"{tempPath}/{beatmapPathName}.sdx");
+		}
+		ZipFile.CreateFromDirectory(tempPath, $"{tempPath_2}/{outputPathName}.sdp");
+		return $"{tempPath_2}/{outputPathName}.sdp";
+	}
+
+	public static void AppendSteamworkIdentityFileToBeatmapFolders(string[] beatmapPathNames, string identify_id)
+	{
+		string dataFolder = $"{Application.persistentDataPath}/music";
+		foreach (string beatmapPathName in beatmapPathNames)
+		{
+			if (!Directory.Exists($"{dataFolder}/{beatmapPathName}"))
+			{
+				continue;
+			}
+			File.WriteAllText($"{dataFolder}/{beatmapPathName}/steamwork_identity.dat", identify_id);
 		}
 	}
 }

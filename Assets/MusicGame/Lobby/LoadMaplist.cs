@@ -26,6 +26,7 @@ public class LoadMaplist : MonoBehaviour
         public Difficulty difficulty;
         public Difficulty refer;
         public string refer_path;
+        public ulong steamwork_identity;
     }
 
     private string dataFolder;
@@ -47,6 +48,7 @@ public class LoadMaplist : MonoBehaviour
     private void Awake()
     {
         UpdateOldRecord();
+        SteamMyUGC.ClearInstalledID();
 
         instance = this;
         DisplayPanel = t_DisplayPanel;
@@ -124,12 +126,23 @@ public class LoadMaplist : MonoBehaviour
             {
                 beatmapInfos.Add(identify_key, new());
             }
+
+            // Steamwork Identity
+            if (File.Exists($"{path}/steamwork_identity.dat"))
+            {
+                ulong steamwork_identity = ulong.Parse(File.ReadAllText($"{path}/steamwork_identity.dat"));
+                info.steamwork_identity = steamwork_identity;
+                SteamMyUGC.AddInstalledID(steamwork_identity);
+            }
+
             beatmapInfos[identify_key].Add(info);
             static int sortComparison(AnBeatmapInfo x, AnBeatmapInfo y) => x.level.CompareTo(y.level);
             beatmapInfos[identify_key].Sort(sortComparison);
+
+
         }
         bool init = false;
-        
+
         foreach (List<AnBeatmapInfo> infos in beatmapInfos.Values)
         {
             for (int i = 0; i < infos.Count; i++)
@@ -221,6 +234,8 @@ public class LoadMaplist : MonoBehaviour
         {
             EmptyInfo.SetActive(true);
         }
+        
+        SteamMyUGC.QueryItemsAndDownload();
     }
 
     void Update()
