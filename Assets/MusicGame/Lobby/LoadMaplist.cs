@@ -242,11 +242,11 @@ public class LoadMaplist : MonoBehaviour
     {
         if (!isDeleteState)
         {
-            deleteStateButtonText.text = "删除谱面";
+            deleteStateButtonText.text = LanguageManager.GetLocalizedString("delete_beatmaps");
         }
         else
         {
-            deleteStateButtonText.text = "取消删除";
+            deleteStateButtonText.text = LanguageManager.GetLocalizedString("cancel_delete");
         }
     }
 

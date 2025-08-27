@@ -7,6 +7,7 @@ using static DataManager;
 public class DataStorager : MonoBehaviour
 {
   // public GameObject dunzi;
+  public static DataStorager instance;
   public static Item coin;
   public static ConnectionInfo coninfo;
 
@@ -18,7 +19,13 @@ public class DataStorager : MonoBehaviour
 
   private void Awake()
   {
-    DontDestroyOnLoad(gameObject);
+    if (instance != null)
+    {
+        Destroy(this.gameObject);
+        return;
+    }
+    DontDestroyOnLoad(this.gameObject);
+    instance = this;
     historyRecord = InitHistory();
     settings = InitSettings();
     keysettings = InitKeySettings();

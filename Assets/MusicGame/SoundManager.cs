@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+    private static SoundManager instance;
     public AudioClip init_boom_sound;
     public static AudioClip boom_sound;
 
@@ -12,7 +13,13 @@ public class SoundManager : MonoBehaviour
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        if (instance != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        DontDestroyOnLoad(this.gameObject);
+        instance = this;
         boom_sound = init_boom_sound;
         best_sound = init_best_sound;
     }

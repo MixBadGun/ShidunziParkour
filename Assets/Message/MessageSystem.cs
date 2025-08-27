@@ -10,8 +10,13 @@ public class MessageSystem : MonoBehaviour
     private MessageBigBox messageBigBox;
     void Awake()
     {
+        if (instance != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        DontDestroyOnLoad(this.gameObject);
         instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     private void m_SendInfo(string info, float delay = 2f)

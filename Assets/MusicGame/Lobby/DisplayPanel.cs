@@ -68,7 +68,7 @@ public class DisplayPanel : MonoBehaviour
                 break;
             }
         }
-        description.text = $"曲师：{author}\n谱师：{mapper}";
+        description.text = $"{LanguageManager.GetLocalizedString("author")}: {author}\n{LanguageManager.GetLocalizedString("mapper")}: {mapper}";
 
         while (recordItemFather.transform.childCount > 0)
         {

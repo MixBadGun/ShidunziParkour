@@ -130,7 +130,7 @@ public class SingleBeatmapInfo : MonoBehaviour
         deleteAllButton.GetComponent<Button>().onClick.AddListener(() => DeleteMapWithAllLevels());
 
         title_object.text = beatmapInfo.title;
-        descrip_object.text = $"曲师：{beatmapInfo.author}\n谱师：{beatmapInfo.mapper}";
+        descrip_object.text = $"{LanguageManager.GetLocalizedString("author")}: {beatmapInfo.author}\n{LanguageManager.GetLocalizedString("mapper")}: {beatmapInfo.mapper}";
 
         int max_rating = 100;
 

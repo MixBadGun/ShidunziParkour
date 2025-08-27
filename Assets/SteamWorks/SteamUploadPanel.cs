@@ -69,7 +69,7 @@ public class SteamUploadPanel : MonoBehaviour
             tags = new string[] { "Beatmap" }
         };
         SteamMyUGC.UploadItem(uGCData);
-        MessageSystem.SendInfo("上传中...");
+        MessageSystem.SendInfo(LanguageManager.GetLocalizedString("uploadinfo_doing"));
         TurnOffPanel();
     }
 

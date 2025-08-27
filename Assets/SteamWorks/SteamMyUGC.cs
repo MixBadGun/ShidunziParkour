@@ -32,8 +32,13 @@ public class SteamMyUGC : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        DontDestroyOnLoad(this.gameObject);
         instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     private void OnEnable()
@@ -106,13 +111,13 @@ public class SteamMyUGC : MonoBehaviour
     {
         if (param.m_eResult == EResult.k_EResultOK)
         {
-            MessageSystem.SendInfo("上传完成！");
+            MessageSystem.SendInfo(LanguageManager.GetLocalizedString("uploadinfo_completed"));
             Debug.Log("Item update submitted successfully.");
             created = false;
         }
         else
         {
-            MessageSystem.SendInfo("因未知原因，上传失败。");
+            MessageSystem.SendInfo(LanguageManager.GetLocalizedString("uploadinfo_failed"));
             Debug.LogError($"Failed to submit item update. {param.m_eResult}");
         }
     }

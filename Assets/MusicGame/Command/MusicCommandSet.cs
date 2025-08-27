@@ -3,6 +3,8 @@ using UnityEngine.Video;
 
 public class MusicCommandSet : MonoBehaviour
 {
+    private static MusicCommandSet Instance;
+
     public AudioSource MusicPlayer;
     public GameObject PauseUI;
     public VideoPlayer videoPlayer;
@@ -32,10 +34,25 @@ public class MusicCommandSet : MonoBehaviour
     void Update()
     {
         KeyCode[] escKeys = DataStorager.keysettings.esc;
-        foreach( KeyCode key in escKeys ){
-            if(Input.GetKeyDown(key)){
+        foreach (KeyCode key in escKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
                 Pause();
             }
+        }
+    }
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
+    public static void TryPause()
+    {
+        if (Instance != null)
+        {
+            Instance.Pause();
         }
     }
 }

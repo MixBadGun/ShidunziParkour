@@ -32,8 +32,13 @@ class SteamStatsAndAchievements : MonoBehaviour {
 
 	void Awake()
 	{
-		s_instance = this;
-		DontDestroyOnLoad(gameObject);
+		if (s_instance != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        DontDestroyOnLoad(this.gameObject);
+        s_instance = this;
     }
 
     void OnEnable()

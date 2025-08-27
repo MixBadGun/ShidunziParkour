@@ -1,0 +1,416 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: LocalizationTable Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: LocalizationTable
+  m_TableCollectionNameGuidString: 5e725dea448841046b92ca5ee8b3b097
+  m_Entries:
+  - m_Id: 22882902016
+    m_Key: start_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 428916695040
+    m_Key: start_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 512668557312
+    m_Key: start_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 563495133184
+    m_Key: start_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 597162811392
+    m_Key: start_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2797276585984
+    m_Key: shop_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3033189408768
+    m_Key: shop_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3339889500160
+    m_Key: shop_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3490884444160
+    m_Key: shop_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3652889436160
+    m_Key: shop_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4393922289664
+    m_Key: shop_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 85749817761792
+    m_Key: settings_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 85823406825472
+    m_Key: settings_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 85963723071488
+    m_Key: settings_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86032971030528
+    m_Key: settings_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86087023026176
+    m_Key: settings_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86388161470464
+    m_Key: settings_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86481061109760
+    m_Key: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87161540796416
+    m_Key: setting_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87495084433408
+    m_Key: settings_6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 88093653557248
+    m_Key: settings_7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 132918461423616
+    m_Key: settings_8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 133093288402944
+    m_Key: settings_9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 133280345972736
+    m_Key: settings_10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 133703316365312
+    m_Key: settings_11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 133957436661760
+    m_Key: settings_12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 134144552951808
+    m_Key: settings_13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 134339986546688
+    m_Key: settings_14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 135557538471936
+    m_Key: settings_15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 135704016150528
+    m_Key: settings_16
+    m_Metadata:
+      m_Items: []
+  - m_Id: 135856047087616
+    m_Key: settings_17
+    m_Metadata:
+      m_Items: []
+  - m_Id: 136109756342272
+    m_Key: settings_18
+    m_Metadata:
+      m_Items: []
+  - m_Id: 136296704860160
+    m_Key: settings_19
+    m_Metadata:
+      m_Items: []
+  - m_Id: 136442746331136
+    m_Key: settings_20
+    m_Metadata:
+      m_Items: []
+  - m_Id: 137135037177856
+    m_Key: settings_21
+    m_Metadata:
+      m_Items: []
+  - m_Id: 137440327983104
+    m_Key: settings_22
+    m_Metadata:
+      m_Items: []
+  - m_Id: 137541079359488
+    m_Key: settings_23
+    m_Metadata:
+      m_Items: []
+  - m_Id: 137757740326912
+    m_Key: settings_24
+    m_Metadata:
+      m_Items: []
+  - m_Id: 137907523117056
+    m_Key: settings_25
+    m_Metadata:
+      m_Items: []
+  - m_Id: 138451616620544
+    m_Key: settings_26
+    m_Metadata:
+      m_Items: []
+  - m_Id: 138863371444224
+    m_Key: settings_27
+    m_Metadata:
+      m_Items: []
+  - m_Id: 139155836067840
+    m_Key: settings_28
+    m_Metadata:
+      m_Items: []
+  - m_Id: 139296936648704
+    m_Key: settings_29
+    m_Metadata:
+      m_Items: []
+  - m_Id: 139411021717504
+    m_Key: settings_30
+    m_Metadata:
+      m_Items: []
+  - m_Id: 139553800019968
+    m_Key: settings_31
+    m_Metadata:
+      m_Items: []
+  - m_Id: 139662780620800
+    m_Key: settings_32
+    m_Metadata:
+      m_Items: []
+  - m_Id: 139728878657536
+    m_Key: settings_33
+    m_Metadata:
+      m_Items: []
+  - m_Id: 139929953591296
+    m_Key: settings_34
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140035373228032
+    m_Key: settings_35
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140349484654592
+    m_Key: settings_36
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140443160240128
+    m_Key: settings_37
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140729597648896
+    m_Key: settings_38
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140980425416704
+    m_Key: settings_39
+    m_Metadata:
+      m_Items: []
+  - m_Id: 143062909935616
+    m_Key: running_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 143149543284736
+    m_Key: running_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 143288471216128
+    m_Key: running_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 143495120379904
+    m_Key: running_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 143638427164672
+    m_Key: running_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 143816576032768
+    m_Key: running_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 144188958924800
+    m_Key: running_6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 144885309857792
+    m_Key: musiclobby_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145198557257728
+    m_Key: musiclobby_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145549196877824
+    m_Key: musiclobby_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145985438048256
+    m_Key: musiclobby_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146429111525376
+    m_Key: musiclobby_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146796712910848
+    m_Key: musiclobby_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146940288131072
+    m_Key: musiclobby_6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 147055090425856
+    m_Key: musiclobby_7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 147148975726592
+    m_Key: musiclobby_8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 147276423847936
+    m_Key: musiclobby_9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 147425166450688
+    m_Key: musiclobby_10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 147768382152704
+    m_Key: musiclobby_11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148063535325184
+    m_Key: musiclobby_12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148284134744064
+    m_Key: musiclobby_13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148361247023104
+    m_Key: musiclobby_14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148449360961536
+    m_Key: musiclobby_15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148596325179392
+    m_Key: musiclobby_16
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148800801693696
+    m_Key: musiclobby_17
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148923329896448
+    m_Key: musiclobby_18
+    m_Metadata:
+      m_Items: []
+  - m_Id: 149054078935040
+    m_Key: musiclobby_
+    m_Metadata:
+      m_Items: []
+  - m_Id: 149279388557312
+    m_Key: musiclobby_19
+    m_Metadata:
+      m_Items: []
+  - m_Id: 149540169408512
+    m_Key: musiclobby_20
+    m_Metadata:
+      m_Items: []
+  - m_Id: 149666921275392
+    m_Key: musiclobby_21
+    m_Metadata:
+      m_Items: []
+  - m_Id: 150408088346624
+    m_Key: musiclobby_22
+    m_Metadata:
+      m_Items: []
+  - m_Id: 150509229793280
+    m_Key: musiclobby_23
+    m_Metadata:
+      m_Items: []
+  - m_Id: 150859399651328
+    m_Key: download_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 150976789831680
+    m_Key: download_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 154787218546688
+    m_Key: delete_beatmaps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 154872417443840
+    m_Key: cancel_delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 155150906646528
+    m_Key: author
+    m_Metadata:
+      m_Items: []
+  - m_Id: 155200202301440
+    m_Key: mapper
+    m_Metadata:
+      m_Items: []
+  - m_Id: 160132561199104
+    m_Key: uploadinfo_doing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 160173023649792
+    m_Key: uploadinfo_failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 160174239997952
+    m_Key: uploadinfo_completed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 161196500934656
+    m_Key: musiclobby_24
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165045164924928
+    m_Key: musiclobby_25
+    m_Metadata:
+      m_Items: []
+  - m_Id: 169882753523712
+    m_Key: clear
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 8663605785009848344
+  references:
+    version: 2
+    RefIds:
+    - rid: 8663605785009848344
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1756267770837

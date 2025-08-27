@@ -4,19 +4,25 @@ using UnityEngine;
 
 public class PauseUI : MonoBehaviour
 {
+    private static PauseUI Instance;
+
     public GameObject PausePanel;
     public AudioSource BGM;
     public Move player;
 
-    void Awake() {
+    void Awake()
+    {
+        Instance = this;
         PausePanel.SetActive(false);
     }
 
     void Update()
     {
         KeyCode[] escKeys = DataStorager.keysettings.esc;
-        foreach( KeyCode key in escKeys ){
-            if(Input.GetKeyDown(key)){
+        foreach (KeyCode key in escKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
                 TogglePause();
             }
         }
@@ -38,5 +44,13 @@ public class PauseUI : MonoBehaviour
             BGM.Pause();
         }
         PausePanel.SetActive(!PausePanel.activeSelf);
+    }
+    
+    public static void TryPause()
+    {
+        if (Instance != null && !Instance.PausePanel.activeSelf)
+        {
+            Instance.TogglePause();
+        }
     }
 }

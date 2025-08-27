@@ -30,5 +30,7 @@ EditorBuildSettings:
     path: Assets/AllScenes/DownloadLobby.unity
     guid: 78dc856fc1353c34895d1514a2df6db1
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: db5be969582425b429a353495f01fabf, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 9f9b6491a8acbdf4faaabb46fecd7c20, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 864e8c65855b53e46a505c07ecd851bd, type: 3}
+    com.unity.localization.settings: {fileID: 11400000, guid: 81bab3052322f064997f47c0f2ed8dbf, type: 2}

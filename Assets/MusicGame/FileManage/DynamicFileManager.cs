@@ -5,9 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class DynamicFileManager : MonoBehaviour
 {
+    private static DynamicFileManager instance;
     void Awake()
     {
-        DontDestroyOnLoad(this);
+        if (instance != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        DontDestroyOnLoad(this.gameObject);
+        instance = this;
     }
 
     void OnEnable()
