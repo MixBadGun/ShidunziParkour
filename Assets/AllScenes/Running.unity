@@ -13569,10 +13569,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4014765731246659927, guid: f9aa9b46ead9c174787090e4e92c5583, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 7f0da0137dd16e548929fba596b25e67, type: 2}
     - target: {fileID: 5822206277982706277, guid: f9aa9b46ead9c174787090e4e92c5583, type: 3}
       propertyPath: m_Name
       value: "\u65E0\u654C\u836F\u4E38"
@@ -13688,25 +13684,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 271602823}
     m_Modifications:
-    - target: {fileID: 352396324809075695, guid: 030e9cfd3db417d4d9e935b78f3cec34, type: 3}
-      propertyPath: m_TagString
-      value: Coin
-      objectReference: {fileID: 0}
     - target: {fileID: 513286467114365794, guid: 030e9cfd3db417d4d9e935b78f3cec34, type: 3}
       propertyPath: m_Name
       value: CoinFlower
-      objectReference: {fileID: 0}
-    - target: {fileID: 2158361710251602168, guid: 030e9cfd3db417d4d9e935b78f3cec34, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2158361710251602168, guid: 030e9cfd3db417d4d9e935b78f3cec34, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2158361710251602168, guid: 030e9cfd3db417d4d9e935b78f3cec34, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 2374420842490717885, guid: 030e9cfd3db417d4d9e935b78f3cec34, type: 3}
       propertyPath: m_LocalPosition.x

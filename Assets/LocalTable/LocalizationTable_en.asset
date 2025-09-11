@@ -402,6 +402,10 @@ MonoBehaviour:
     m_Localized: Clear
     m_Metadata:
       m_Items: []
+  - m_Id: 885454021681152
+    m_Localized: Invincible
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

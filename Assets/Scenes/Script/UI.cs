@@ -20,7 +20,7 @@ public class UI : MonoBehaviour
 
     public Dictionary<string, string> STATUS_DICT = new()
     {
-        {"invincible", "无敌状态"}
+        {"invincible", LanguageManager.GetLocalizedString("invincible")}
     };
     void Start()
     {

@@ -30,6 +30,10 @@ public class Settings : MonoBehaviour
     public InputField MusicGameOffsetMs;
     public TMP_Dropdown SkinDropdown;
     public TMP_Dropdown TouchModeDropdown;
+    [SerializeField]
+    private Button UploadButton;
+    [SerializeField]
+    private GameObject UploadPanel;
     List<string> subfolders;
     void Awake()
     {
@@ -87,6 +91,7 @@ public class Settings : MonoBehaviour
         {
             SkinDropdown.value = 0;
         }
+        // DetectIsAbleToUpload();
 
         TouchModeDropdown.value = (int)DataStorager.settings.touchControlMode;
 
@@ -94,7 +99,8 @@ public class Settings : MonoBehaviour
         UseGamePad.isOn = DataStorager.settings.useGamepad;
     }
 
-    public void SaveAndExit(){
+    public void SaveAndExit()
+    {
         DataStorager.settings.MusicVolume = MusicVolume.value;
         DataStorager.settings.SoundVolume = SoundVolume.value;
         DataStorager.settings.hasMotionBlur = hasMotionBlur.isOn;
@@ -160,5 +166,25 @@ public class Settings : MonoBehaviour
         DataStorager.SaveKeySettings();
         globalSettings.handleSettings();
         SceneManager.LoadScene("Initalize");
+    }
+
+    public void DetectIsAbleToUpload()
+    {
+        string path_name = SkinDropdown.options[SkinDropdown.value].text;
+        string skinFolder = $"{Application.persistentDataPath}/skin/{path_name}";
+        string steamWorkIdentityPath = $"{skinFolder}/steamwork_identity.dat";
+        if (File.Exists(steamWorkIdentityPath))
+        {
+            UploadButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            UploadButton.gameObject.SetActive(true);
+        }
+    }
+
+    public void OpenUploadPanel()
+    {
+        UploadPanel.SetActive(true);
     }
 }

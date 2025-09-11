@@ -46,6 +46,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2374420842490717885}
     m_Modifications:
+    - target: {fileID: 706532008421317139, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 6648132222342193487, guid: 29a7acb7111e87145b7d38f6d3953eef, type: 2}
     - target: {fileID: 4340022521044204794, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -108,6 +112,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2374420842490717885}
     m_Modifications:
+    - target: {fileID: 706532008421317139, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 6648132222342193487, guid: 29a7acb7111e87145b7d38f6d3953eef, type: 2}
     - target: {fileID: 4340022521044204794, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -170,6 +178,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2374420842490717885}
     m_Modifications:
+    - target: {fileID: 706532008421317139, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 6648132222342193487, guid: 29a7acb7111e87145b7d38f6d3953eef, type: 2}
     - target: {fileID: 4340022521044204794, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -244,6 +256,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2374420842490717885}
     m_Modifications:
+    - target: {fileID: 706532008421317139, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 6648132222342193487, guid: 29a7acb7111e87145b7d38f6d3953eef, type: 2}
     - target: {fileID: 4340022521044204794, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -306,6 +322,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2374420842490717885}
     m_Modifications:
+    - target: {fileID: 706532008421317139, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 6648132222342193487, guid: 29a7acb7111e87145b7d38f6d3953eef, type: 2}
     - target: {fileID: 4340022521044204794, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -368,6 +388,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2374420842490717885}
     m_Modifications:
+    - target: {fileID: 706532008421317139, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 6648132222342193487, guid: 29a7acb7111e87145b7d38f6d3953eef, type: 2}
     - target: {fileID: 4340022521044204794, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -430,6 +454,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2374420842490717885}
     m_Modifications:
+    - target: {fileID: 706532008421317139, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 6648132222342193487, guid: 29a7acb7111e87145b7d38f6d3953eef, type: 2}
     - target: {fileID: 4340022521044204794, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -473,6 +501,18 @@ PrefabInstance:
     - target: {fileID: 5181451362839550071, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
       propertyPath: m_Name
       value: Coin 1 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5403594554649621934, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5403594554649621934, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5403594554649621934, guid: d689f52d8438b854b93be7fd11cc9cfb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

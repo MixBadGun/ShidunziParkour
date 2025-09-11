@@ -403,6 +403,10 @@ MonoBehaviour:
     m_Key: clear
     m_Metadata:
       m_Items: []
+  - m_Id: 885454021681152
+    m_Key: invincible
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
