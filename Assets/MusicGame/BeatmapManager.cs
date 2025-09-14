@@ -1113,6 +1113,10 @@ public class BeatmapManager : MonoBehaviour
 
     bool JudgeTranstoNextTrack(int judge_track,int next_index = 1)
     {
+        if (next_index >= auto_remain_beats.Count())
+        {
+            return true;
+        }
         if (auto_remain_beats.Count() < 2)
         {
             return true;
@@ -1142,7 +1146,6 @@ public class BeatmapManager : MonoBehaviour
         }
         int[] should_tracks = toTouchTracks(auto_remain_beats[0].track, auto_remain_beats[0].size, auto_remain_beats[0].isDodge);
         int nearest_track = CalcNearestTrack(should_tracks, Player.GetNowTrack());
-        Debug.Log(JudgeTranstoNextTrack(nearest_track));
         if (!JudgeTranstoNextTrack(nearest_track))
         {
             JumpJudge();

@@ -170,6 +170,8 @@ public class Settings : MonoBehaviour
 
     public void DetectIsAbleToUpload()
     {
+        return;
+        // 未实现
         string path_name = SkinDropdown.options[SkinDropdown.value].text;
         string skinFolder = $"{Application.persistentDataPath}/skin/{path_name}";
         string steamWorkIdentityPath = $"{skinFolder}/steamwork_identity.dat";
