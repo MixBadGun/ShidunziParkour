@@ -153,12 +153,31 @@ public class MusicObstacle : MonoBehaviour
                     {
                         GenerateBoom(GlobalResources.showboom);
                     }
-                    beatmapManager.AddNowPoint(BeatmapManager.M_TYPE.Miss, !isShow);
+
+                    if (forcePerfect)
+                    {
+                        beatmapManager.AddNowPoint(BeatmapManager.M_TYPE.Perfect, !isShow);
+                    }
+                    else
+                    {
+                        beatmapManager.AddNowPoint(BeatmapManager.M_TYPE.Miss, !isShow);
+                    }
+
                     if (isBest)
                     {
-                        beatmapManager.AddNowBest(BeatmapManager.M_TYPE.Break_M, !isShow);
+                        if (forcePerfect)
+                        {
+                            beatmapManager.AddNowBest(BeatmapManager.M_TYPE.Break_P, !isShow);
+                        }
+                        else
+                        {
+                            beatmapManager.AddNowBest(BeatmapManager.M_TYPE.Break_M, !isShow);
+                        }
                     }
-                    beatmapManager.Miss();
+
+                    if (!forcePerfect) {
+                        beatmapManager.Miss();
+                    }
                     if (isLast)
                     {
                         triggerEnd();
