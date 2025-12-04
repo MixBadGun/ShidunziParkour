@@ -35,6 +35,8 @@ public class Settings : MonoBehaviour
     [SerializeField]
     private GameObject UploadPanel;
     List<string> subfolders;
+    [SerializeField]
+    private TMP_Dropdown Model;
     void Awake()
     {
         MusicVolume.value = DataStorager.settings.MusicVolume;
@@ -97,6 +99,23 @@ public class Settings : MonoBehaviour
 
         FixedCameraMod.isOn = DataStorager.settings.fixedCameraMod;
         UseGamePad.isOn = DataStorager.settings.useGamepad;
+
+        // 从 PlayerModel 获取全部模型，加入到 DropDown 里
+        List<string> model_list = PlayerModel.PlayerModels.Keys.ToList();
+        List<string> localized_model_list = new();
+        // 将 List 里的值本地化
+        for(int i = 0;i < model_list.Count; i++)
+        {
+            localized_model_list.Add(LanguageManager.GetLocalizedString(model_list[i]));
+        }
+        Model.AddOptions(localized_model_list);
+        if (model_list.Contains(DataStorager.settings.modelName))
+        {
+            Model.value = model_list.IndexOf(DataStorager.settings.modelName);
+        } else
+        {
+            Model.value = 0;
+        }
     }
 
     public void SaveAndExit()
@@ -161,6 +180,8 @@ public class Settings : MonoBehaviour
         DataStorager.settings.fixedCameraMod = FixedCameraMod.isOn;
 
         DataStorager.settings.useGamepad = UseGamePad.isOn;
+        // 模型
+        DataStorager.settings.modelName = PlayerModel.PlayerModels.Keys.ToList()[Model.value];
         // 保存
         DataStorager.SaveSettings();
         DataStorager.SaveKeySettings();

@@ -70,6 +70,7 @@ public class DataManager
         public bool fixedCameraMod;
         public bool useGamepad;
         public TouchControlMode touchControlMode;
+        public string modelName;
     }
 
     public struct KeySettings

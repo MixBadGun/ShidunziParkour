@@ -1,8 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using static HitEffectManager;
 
 public class MusicBoomHandle : MonoBehaviour
 {
+    [SerializeField]
+    private HitEffectType hitEffectType;
     public float destroyTime = 0.5f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake(){
@@ -14,6 +17,7 @@ public class MusicBoomHandle : MonoBehaviour
     }
     void Start()
     {
+        HitEffectManager.CreateHitEffect(hitEffectType, transform.position);
     }
 
     IEnumerator DestroyAfterDelay()

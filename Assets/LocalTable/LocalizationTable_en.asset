@@ -406,6 +406,26 @@ MonoBehaviour:
     m_Localized: Invincible
     m_Metadata:
       m_Items: []
+  - m_Id: 36016787110584320
+    m_Localized: Model
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36027942067593216
+    m_Localized: Shidunzi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36028026947723264
+    m_Localized: Ball
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36028076063023104
+    m_Localized: Chocolate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36034051599851520
+    m_Localized: Stool
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

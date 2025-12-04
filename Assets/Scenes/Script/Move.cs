@@ -455,7 +455,7 @@ public class Move : MonoBehaviour
         velocity = Vector3.zero;
         // the_rigidbody.freezeRotation = true;
         // the_rigidbody.useGravity = false;
-        realDunzi.GetComponent<Renderer>().enabled = false;
+        Destroy(realDunzi.transform.GetChild(0).gameObject);
         BGM.GetComponent<AudioSource>().Stop();
     }
 

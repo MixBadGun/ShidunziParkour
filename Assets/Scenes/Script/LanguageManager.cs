@@ -9,9 +9,8 @@ public class LanguageManager : MonoBehaviour
 {
     private static LanguageManager instance;
     private StringTable table;
-    private
 
-    void Awake()
+    private void Awake()
     {
         if (instance != null)
         {
@@ -31,6 +30,10 @@ public class LanguageManager : MonoBehaviour
     {
 
         var entry = table.GetEntry(key);
+        if(entry == null)
+        {
+            return key;
+        }
         return entry.GetLocalizedString();
     }
 

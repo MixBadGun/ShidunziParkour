@@ -18,10 +18,15 @@ public class UI : MonoBehaviour
     private string life_text;
     private string status_text;
 
-    public Dictionary<string, string> STATUS_DICT = new()
+    public Dictionary<string, string> STATUS_DICT;
+    void Awake()
     {
-        {"invincible", LanguageManager.GetLocalizedString("invincible")}
-    };
+        STATUS_DICT = new()
+        {
+            {"invincible", LanguageManager.GetLocalizedString("invincible")}
+        };
+    }
+
     void Start()
     {
         miles_text = MilesDisplay.GetComponent<Text>().text;

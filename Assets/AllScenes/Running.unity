@@ -2925,11 +2925,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1978920451928136755, guid: c201a8d96a2a016428103c56d89f7e25, type: 3}
   m_PrefabInstance: {fileID: 525372244}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &534076458 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 2983106913215166422, guid: 4b03a37e3f6c9ea47824f905d5e6cea0, type: 3}
-  m_PrefabInstance: {fileID: 716197959321395672}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &556121983
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6413,6 +6408,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a5d6dc2f0359e4429bb01ca0110a086, type: 3}
+--- !u!1 &1191218324 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5240218233221547894, guid: 4b03a37e3f6c9ea47824f905d5e6cea0, type: 3}
+  m_PrefabInstance: {fileID: 716197959321395672}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1191218327 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2382834554018164994, guid: 4b03a37e3f6c9ea47824f905d5e6cea0, type: 3}
+  m_PrefabInstance: {fileID: 716197959321395672}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1201273907
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8674,11 +8679,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 6485725133649343935, guid: e530408b4eaf2e74fa550262cc0117da, type: 3}
   m_PrefabInstance: {fileID: 1493626267}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1494595967 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1415259774769248970, guid: 4b03a37e3f6c9ea47824f905d5e6cea0, type: 3}
-  m_PrefabInstance: {fileID: 716197959321395672}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1502260566 stripped
 Transform:
@@ -13312,10 +13312,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: RealDunzi
       objectReference: {fileID: 0}
-    - target: {fileID: 8421935019460277295, guid: 4b03a37e3f6c9ea47824f905d5e6cea0, type: 3}
-      propertyPath: m_MotionVectors
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13611,10 +13607,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   center: {fileID: 1552135315}
   BGM: {fileID: 56771267}
-  realDunzi: {fileID: 1494595967}
+  realDunzi: {fileID: 1191218324}
   hurt: {fileID: 230722257}
   animator: {fileID: 1552025033}
-  self_animatior: {fileID: 534076458}
+  self_animatior: {fileID: 1191218327}
   hurtUI: {fileID: 862465161}
   speedTimes: 1
   now_track: 2
