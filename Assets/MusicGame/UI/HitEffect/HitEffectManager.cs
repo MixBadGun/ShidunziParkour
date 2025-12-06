@@ -12,7 +12,8 @@ public class HitEffectManager : MonoBehaviour
     {
         Perfect,
         Great,
-        Miss
+        Miss,
+        Show
     }
 
     [SerializeField]
@@ -33,6 +34,11 @@ public class HitEffectManager : MonoBehaviour
 
     private void _CreateHitEffect(HitEffectType effectType, Vector3 WorldPosition)
     {
+        if (effectType < 0 || effectType >= HitEffectType.Show)
+        {
+            // 无需创建效果
+            return;
+        }
         // 根据 WorldPosition, 映射到 Canvas 的位置
         Vector2 canvasPosition;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(

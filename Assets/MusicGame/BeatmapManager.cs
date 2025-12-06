@@ -927,6 +927,10 @@ public class BeatmapManager : MonoBehaviour
 
     int CalcNearestTrack(int[] tracks, int now_track)
     {
+        if(tracks.Count() <= 0)
+        {
+            return now_track;
+        }
         int nearest_track = tracks[0];
         foreach (int track in tracks)
         {
