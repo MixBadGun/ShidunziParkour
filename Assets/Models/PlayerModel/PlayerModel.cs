@@ -12,6 +12,7 @@ public class PlayerModel : MonoBehaviour
         { "ball", "Model/ball"},
         { "bandeng", "Model/bandeng"},
         { "chocolate", "Model/chocolate" },
+        { "ria", "Model/ria_bollard" }
     };
     [SerializeField]
     private GameObject currentModel;
