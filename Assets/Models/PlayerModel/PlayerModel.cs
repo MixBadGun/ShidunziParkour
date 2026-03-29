@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerModel : MonoBehaviour
@@ -23,5 +25,15 @@ public class PlayerModel : MonoBehaviour
         }
         Destroy(currentModel);
         currentModel = Instantiate(Resources.Load<GameObject>(PlayerModels[modelName]), transform);
+    }
+
+    public static int GetPlayerModelIndex(string modelName)
+    {
+        List<string> model_list = PlayerModels.Keys.ToList();
+        if (!model_list.Contains(modelName))
+        {
+            return 0; // 默认模型索引
+        }
+        return model_list.IndexOf(modelName);
     }
 }
