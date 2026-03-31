@@ -180,9 +180,9 @@ public class Player : MonoBehaviour
         }
         updateGravity();
 
-        if(DateTime.Now.Day == 1 && DateTime.Now.Month == 4){
-            transform.position = new Vector3(math.cos(Time.time * 40) * 3,1 + math.sin(Time.time * 40),transform.position.z);
-        }
+        // if(DateTime.Now.Day == 1 && DateTime.Now.Month == 4){
+        //     transform.position = new Vector3(math.cos(Time.time * 40) * 3,1 + math.sin(Time.time * 40),transform.position.z);
+        // }
     }
 
     public float GetVelocity()

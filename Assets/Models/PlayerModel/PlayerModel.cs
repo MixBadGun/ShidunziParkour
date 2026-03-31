@@ -9,10 +9,10 @@ public class PlayerModel : MonoBehaviour
     public static Dictionary<string, string> PlayerModels = new()
     {
         { "shidunzi", "Model/default" },
+        { "ria", "Model/ria_bollard" },
         { "ball", "Model/ball"},
         { "bandeng", "Model/bandeng"},
-        { "chocolate", "Model/chocolate" },
-        { "ria", "Model/ria_bollard" }
+        { "chocolate", "Model/chocolate" }
     };
     [SerializeField]
     private GameObject currentModel;

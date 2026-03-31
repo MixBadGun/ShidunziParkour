@@ -880,7 +880,7 @@ public class BeatmapManager : MonoBehaviour
                 // && !DataStorager.settings.fixedCameraMod
                 && !DataStorager.settings.cinemaMod
                 && !isPractcing
-                && !(DateTime.Now.Day == 1 && DateTime.Now.Month == 4)
+                // && !(DateTime.Now.Day == 1 && DateTime.Now.Month == 4)
                 && !isViewingRecord
             )
             {

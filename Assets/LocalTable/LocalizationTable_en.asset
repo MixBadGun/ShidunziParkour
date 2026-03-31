@@ -91,7 +91,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87495084433408
-    m_Localized: Disable Explosion Effect
+    m_Localized: Disable Explosion
     m_Metadata:
       m_Items: []
   - m_Id: 88093653557248
@@ -424,6 +424,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 36034051599851520
     m_Localized: Stool
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78055836348145664
+    m_Localized: Ria
     m_Metadata:
       m_Items: []
   references:

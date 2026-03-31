@@ -30,10 +30,10 @@ public class MusicObstacle : MonoBehaviour
         }
 
         // 愚人节彩蛋
-        if(DateTime.Now.Day == 1 && DateTime.Now.Month == 4){
-            isTouched = true;
-            forcePerfect = true;
-        }
+        // if(DateTime.Now.Day == 1 && DateTime.Now.Month == 4){
+        //     isTouched = true;
+        //     forcePerfect = true;
+        // }
     }
 
     void GenerateBoom(GameObject theboom){
@@ -43,11 +43,11 @@ public class MusicObstacle : MonoBehaviour
         newboom.transform.localScale *= size;
 
         // 愚人节彩蛋
-        if (DateTime.Now.Day == 1 && DateTime.Now.Month == 4)
-        {
-            newboom.transform.localScale *= 100;
-            newboom.transform.position += new Vector3(0, 0, 20) * player.GetComponent<Player>().GetVelocity() / 50;
-        }
+        // if (DateTime.Now.Day == 1 && DateTime.Now.Month == 4)
+        // {
+        //     newboom.transform.localScale *= 100;
+        //     newboom.transform.position += new Vector3(0, 0, 20) * player.GetComponent<Player>().GetVelocity() / 50;
+        // }
 
         // 播放声音
         boomSounds.transform.GetChild(index % boomSounds.transform.childCount).GetComponent<AudioSource>().volume = Math.Min(size, 2);
